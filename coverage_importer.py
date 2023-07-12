@@ -11,8 +11,8 @@ class CoverageImporter:
 
     def fetch_builds(self, page: int) -> BuildList:
         try:
-            BUILD_URL = f"https://coveralls.io/github/{self.org}/{self.repo}.json?page=1{page}&branch={self.branch}"
-            res = requests.get(BUILD_URL)
+            url = f"https://coveralls.io/github/{self.org}/{self.repo}.json?page=1{page}&branch={self.branch}"
+            res = requests.get(url)
             if res.status_code != 200:
                  raise ValueError, KeyError, requests.RequestException
             else:
@@ -21,12 +21,26 @@ class CoverageImporter:
                 print('Error fetching coveralls builds')
 
     def fetch_source_file_info(self, b: Build, page: int) -> None:
-        pass
+        try:
+             url = f"https://coveralls.io/builds/{b.commit_sha}/source_files.json"
+             res = requests.get(url)
+             if res.status_code != 200:
+                  raise ValueError, KeyError, requests.RequestException
+             else:
+                  pass
+        except (ValueError, KeyError, requests.RequestException):
+             pass
     
     def fecth(url: str) -> any:
         pass
 
-
-
     def get_coverage_array( commit: str,   sf: SourceFile) -> None:
-        pass
+        try:
+             url = f"https://coveralls.io/builds/{commit}/source.json?filename={sf.name}"
+             res = requests.get(url)
+             if res.status_code != 200:
+                  raise ValueError, KeyError, requests.RequestException
+             else:
+                  pass
+        except (ValueError, KeyError, requests.RequestException):
+             pass
