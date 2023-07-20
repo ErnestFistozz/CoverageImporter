@@ -1,0 +1,37 @@
+[
+  {
+    "created_at": "2023-07-12T09:22:08Z",
+    "commit_sha": "999294f5cd6233686c54a6fb9e19c45cea98db20",
+    "covered_percent": 81.25,
+    "branch": "main",
+    "patch_coverage": 71.429
+  },
+  {
+    "created_at": "2023-07-06T12:35:52Z",
+    "commit_sha": "cfd38915e9b7ca3ca86d390f3de9bf2e9df73f7c",
+    "covered_percent": 82.73,
+    "branch": "main",
+    "patch_coverage": 0.0
+  },
+  {
+    "created_at": "2023-06-13T22:46:03Z",
+    "commit_sha": "d88970c89e39827386a6ffda4ccd7980f0a2686f",
+    "covered_percent": 82.73,
+    "branch": "main",
+    "patch_coverage": 87.179
+  },
+  {
+    "created_at": "2023-06-13T22:35:13Z",
+    "commit_sha": "b398e5894c525004ffaeca496956daead7ed1c8d",
+    "covered_percent": 81.0,
+    "branch": "main",
+    "patch_coverage": 66.0
+  },
+  {
+    "created_at": "2023-06-13T22:30:05Z",
+    "commit_sha": "dc257949b338ac773b82a72de560ec5a14a1c90b",
+    "covered_percent": 96.0,
+    "branch": "main",
+    "patch_coverage": 96.0
+  }
+]
