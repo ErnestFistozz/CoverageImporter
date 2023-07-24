@@ -26,8 +26,10 @@ class CoverageImporter:
                 try:
                     #print("Executed Lines: ", executed_lines, "Executable Lines: ", executable_lines)
                     build['patch_coverage'] = round((executed_lines/executable_lines)*100, 3)
+                    build['repository_name'] = f'{coveralls.org()}/{coveralls.repo()}'
                 except ZeroDivisionError:
                     build['patch_coverage'] = 0.0
+                    build['repository_name'] = f'{coveralls.org()}/{coveralls.repo()}'
                     continue
             except Exception:
                 continue
@@ -59,8 +61,10 @@ class CoverageImporter:
                 try:
                     #print("Executed Lines: ", executed_lines, "Executable Lines: ", executable_lines)
                     build['patch_coverage'] = round((executed_lines/executable_lines)*100, 3)
+                    build['repository_name'] = f'{codecov.org()}/{codecov.repo()}'
                 except ZeroDivisionError:
                     build['patch_coverage'] = 0.0
+                    build['repository_name'] = f'{codecov.org()}/{codecov.repo()}'
                     continue
             except Exception:
                 continue
