@@ -14,7 +14,7 @@ if __name__ == '__main__':
         data = coverage_importer.codecov_data(codecov, helpers, codecov_repo['language'])
         helpers.save_into_file('codecovdata.csv', data)
 
-    # for coveralls_repo in codecov_repositories:
-    #     coveralls = CoverallsCoverage(coveralls_repo['org'],coveralls_repo['repo'], coveralls_repo['main_branch'])
-    #     data = coverage_importer.coveralls_data(coveralls, helpers, coveralls_repo['language'])
-    #     helpers.csv_creator('coverallsdata.csv', data)
+    for coveralls_repo in coveralls_repositories:
+        coveralls = CoverallsCoverage(coveralls_repo['org'],coveralls_repo['repo'], coveralls_repo['main_branch'])
+        data = coverage_importer.coveralls_data(coveralls, helpers, coveralls_repo['language'])
+        helpers.csv_creator('coverallsdata.csv', data)

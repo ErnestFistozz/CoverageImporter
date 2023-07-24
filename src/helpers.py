@@ -18,22 +18,19 @@ class Helpers:
         return formated_timestamp.strftime('%Y-%m-%d %H:%M:%S')
 
     @classmethod
-    def save_into_file(cls, repo,  coverage :list) -> None:
+    def save_into_file(cls, filename,  coverage :list) -> None:
         csv_full_path = ''
         match platform.platform().lower():
             case 'linux' | 'darwin':
-                csv_full_path = rf'/home/ernest/repositories/{repo}.csv'
+                csv_full_path = rf'/home/ernest/repositories/{filename}'
             case _:
-                csv_full_path = rf'C:\Users\ebmamba\Desktop\AzureDevOpsRepos{repo}.csv'
-        if os.path.exists(csv_full_path):
-            raise FileExistsError
-        else:
-            with open(csv_full_path, "a+") as outfile:
-                csv_writer = csv.writer(outfile)
-                #csv_writer.writerow(["RepositoryName", "Branch" , "Date", "CommitHash", "OverallCoverage", "PatchCooverage", "PatchSize"])
-                #csv_writer.writerow(["RepositoryName", "Branch" , "Date", "CommitHash", "OverallCoverage", "PatchCooverage", "PatchSize"])
-                for row in coverage:
-                        csv_writer.writerow(row)
+                csv_full_path = rf'C:\Users\ebmamba\Desktop\AzureDevOpsRepos{filename}'
+        with open(csv_full_path, "a+") as outfile:
+            csv_writer = csv.writer(outfile)
+            #csv_writer.writerow(["RepositoryName", "Branch" , "Date", "CommitHash", "OverallCoverage", "PatchCooverage", "PatchSize"])
+            #csv_writer.writerow(["RepositoryName", "Branch" , "Date", "CommitHash", "OverallCoverage", "PatchCooverage", "PatchSize"])
+            for row in coverage:
+                csv_writer.writerow(row)
 
     @classmethod
     def read_from_csv(cls, filename: str) -> list:
