@@ -38,11 +38,11 @@ class CodeCovCoverage(BaseCoverage):
 	def fetch_source_file_names(self, commit: str) -> list[str]:
 		try:
 			url = f'https://codecov.io/api/v2/gh/{self.organisation}/repos/{self.repository}/report?sha={commit}&branch={self.branch}'
-			print("URL: ", url)
+			#print("URL: ", url)
 			res = requests.get(url, verify=False)
 			res.raise_for_status()
 			full_file_names = [ file['name'] for file in res.json()['files']]
-			print("ALL FILES", full_file_names)
+			#print("ALL FILES", full_file_names)
 			return full_file_names
 		except (requests.RequestException, KeyError):
 			return None
