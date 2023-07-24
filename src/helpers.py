@@ -18,7 +18,7 @@ class Helpers:
         return formated_timestamp.strftime('%Y-%m-%d %H:%M:%S')
 
     @classmethod
-    def save_into_file(cls, filename,  coverage :list) -> None:
+    def save_into_file(cls, filename: str,  coverage :list) -> None:
         csv_full_path = ''
         match platform.platform().lower():
             case 'linux' | 'darwin':
