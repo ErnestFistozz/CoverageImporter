@@ -1,5 +1,5 @@
 import requests
-from basecoverage import BaseCoverage
+from .basecoverage import BaseCoverage
 import json
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

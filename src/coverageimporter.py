@@ -1,7 +1,7 @@
-from codecov import CodeCovCoverage
-from coveralls import CoverallsCoverage
+from .codecov import CodeCovCoverage
+from .coveralls import CoverallsCoverage
 from pydriller import Repository
-from helpers import Helpers
+from .helpers import Helpers
 
 class CoverageImporter:
 
