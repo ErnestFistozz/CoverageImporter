@@ -30,8 +30,11 @@ class Helpers:
             #csv_writer.writerow(["RepositoryName", "Branch" , "Date", "CommitHash", "OverallCoverage", "PatchCooverage", "PatchSize"])
             #csv_writer.writerow(["RepositoryName", "Branch" , "Date", "CommitHash", "OverallCoverage", "PatchCooverage", "PatchSize"])
             for row in coverage:
-                csv_writer.writerow([row['repository_name'], row['branch'], Helpers.date_formatter(row['created_at']), row['commit_sha'], row['covered_percent'], row['patch_coverage'] ])
-
+                try:
+                    csv_writer.writerow([row['repository_name'], row['branch'], Helpers.date_formatter(row['created_at']), row['commit_sha'], row['covered_percent'], row['patch_coverage'] ])
+                except KeyError:
+                    print(row)
+                    continue
     @classmethod
     def read_from_csv(cls, filename: str) -> list:
         if not os.path.exists(filename):
