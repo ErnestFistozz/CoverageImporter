@@ -21,24 +21,26 @@ class CoverallsCoverage(BaseCoverage):
 
     def collect_builds_data(self) -> list[dict]:
         data = []
-        for page in range(1, self.total_builds_pages() + 1):
-            url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page={page}&branch={self.branch}'
-            try:
-                res = requests.get(url, verify=False) 
-                if res.status_code != 200:
-                    raise Exception
-                data.extend(   
-                    {
-                    'created_at': build['created_at'],
-                    'commit_sha': build['commit_sha'],
-                    'coverage_change': build['coverage_change'],
-                    'covered_percent': build['covered_percent'],
-                    'branch': build['branch']
-                } 
-                    for build in res.json()['builds']
-                )
-            except Exception:
-                continue
+        builds_pages = self.total_builds_pages()
+        if builds_pages != 0:
+            for page in range(1, builds_pages + 1):
+                url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page={page}&branch={self.branch}'
+                try:
+                    res = requests.get(url, verify=False) 
+                    if res.status_code != 200:
+                        raise Exception
+                    data.extend(   
+                        {
+                        'created_at': build['created_at'],
+                        'commit_sha': build['commit_sha'],
+                        'coverage_change': build['coverage_change'],
+                        'covered_percent': build['covered_percent'],
+                        'branch': build['branch']
+                    } 
+                        for build in res.json()['builds']
+                    )
+                except Exception:
+                    continue
         return data
     
     def fetch_source_files(self, commit_hash: str) -> list[str]:
