@@ -31,9 +31,12 @@ class Helpers:
             #csv_writer.writerow(["RepositoryName", "Branch" , "Date", "CommitHash", "OverallCoverage", "PatchCooverage", "PatchSize"])
             for row in coverage:
                 try:
-                    csv_writer.writerow([row['repository_name'], row['branch'], Helpers.date_formatter(row['created_at']), row['commit_sha'], row['covered_percent'], row['patch_coverage'] ])
+                    csv_writer.writerow([row['repository_name'], row['branch'], Helpers.date_formatter(row['created_at']), row['commit_sha'], 
+                                         row['covered_percent'], row['patch_coverage'], 
+                                         row['test_files'], row['code_files'], row['test_code_files'], row['other_files'],
+                                         row['code_patch_size'], row['test_patch_size'], row['config_patch_size']
+                                         ])
                 except KeyError:
-                    print(row)
                     continue
     @classmethod
     def read_from_csv(cls, filename: str) -> list:
