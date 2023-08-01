@@ -2,6 +2,8 @@ from .codecov import CodeCovCoverage
 from .coveralls import CoverallsCoverage
 from pydriller import Repository
 from .helpers import Helpers
+from .patch_files import PatchFiles
+from .patch_size import PatchSize
 
 class CoverageImporter:
 
@@ -26,6 +28,11 @@ class CoverageImporter:
                                     executed_lines += len([1 for line_number in modified_lines  if isinstance(coverage_array[line_number - 1], int) and coverage_array[line_number - 1] > 0])
                                 else:
                                     continue
+                        patchFiles = PatchFiles()
+                        patchSize = PatchSize()
+                        patch_files = patchFiles.patch_files(commit.modified_files, lang_ext)
+                        patch_size = patchSize.patch_sizes(commit, lang_ext)
+
                     else:
                         continue
                 try:
@@ -34,7 +41,9 @@ class CoverageImporter:
                 except ZeroDivisionError:
                     build['patch_coverage'] = 0.0
                     build['repository_name'] = f'{coveralls.org()}/{coveralls.repo()}'
-                    continue
+                finally:
+                    build.update(patch_files)
+                    build.update(patch_size)
             except Exception:
                 continue
         return builds
