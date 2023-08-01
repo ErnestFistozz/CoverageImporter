@@ -16,6 +16,8 @@ class CoverageImporter:
                 for commit in Repository(git_url, single = build['commit_sha']).traverse_commits():
                     coveralls_commit_files = coveralls.fetch_source_files(commit.hash)
                     executable_lines, executed_lines = 0 , 0
+                    patchFiles = PatchFiles()
+                    patchSize = PatchSize()
                     if not isinstance(coveralls_commit_files, type(None)) and len(coveralls_commit_files) != 0:
                         for m in commit.modified_files:
                             if m.filename.endswith(lang_ext) and helpers.index_finder(m.filename, coveralls_commit_files) != -1:
@@ -28,8 +30,6 @@ class CoverageImporter:
                                     executed_lines += len([1 for line_number in modified_lines  if isinstance(coverage_array[line_number - 1], int) and coverage_array[line_number - 1] > 0])
                                 else:
                                     continue
-                        patchFiles = PatchFiles()
-                        patchSize = PatchSize()
                         patch_files = patchFiles.patch_files(commit.modified_files, lang_ext)
                         patch_size = patchSize.patch_sizes(commit, lang_ext)
 
@@ -56,6 +56,8 @@ class CoverageImporter:
                 for commit in Repository(git_url, single = build['commit_sha']).traverse_commits():
                     codecov_commit_files = codecov.fetch_source_file_names(commit.hash)
                     executable_lines, executed_lines = 0 , 0
+                    patchFiles = PatchFiles()
+                    patchSize = PatchSize()
                     if not isinstance(codecov_commit_files, type(None)) and len(codecov_commit_files) != 0:
                         for m in commit.modified_files:
                             if m.filename.endswith(lang_ext) and helpers.index_finder(m.filename, codecov_commit_files) != -1:
@@ -72,6 +74,8 @@ class CoverageImporter:
                                     executable_lines += len(coverage_array)
                                 else:
                                     continue
+                        patch_files = patchFiles.patch_files(commit.modified_files, lang_ext)
+                        patch_size = patchSize.patch_sizes(commit, lang_ext)
                     else:
                         continue
                 try:
@@ -80,7 +84,9 @@ class CoverageImporter:
                 except ZeroDivisionError:
                     build['patch_coverage'] = 0.0
                     build['repository_name'] = f'{codecov.org()}/{codecov.repo()}'
-                    continue
+                finally:
+                    build.update(patch_files)
+                    build.update(patch_size)
             except Exception:
                 continue
         return builds
