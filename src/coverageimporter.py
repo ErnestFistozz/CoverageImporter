@@ -30,7 +30,8 @@ class CoverageImporter:
                                     executed_lines += len([1 for line_number in modified_lines  if isinstance(coverage_array[line_number - 1], int) and coverage_array[line_number - 1] > 0])
                                 else:
                                     continue
-                        patch_files = patchFiles.patch_files(commit.modified_files, lang_ext)
+                        files = [ m.filename for m in commit.modified_files]
+                        patch_files = patchFiles.patch_files(files, lang_ext)
                         patch_size = patchSize.patch_sizes(commit, lang_ext)
 
                     else:
@@ -74,7 +75,8 @@ class CoverageImporter:
                                     executable_lines += len(coverage_array)
                                 else:
                                     continue
-                        patch_files = patchFiles.patch_files(commit.modified_files, lang_ext)
+                        files = [ m.filename for m in commit.modified_files]
+                        patch_files = patchFiles.patch_files(files, lang_ext)
                         patch_size = patchSize.patch_sizes(commit, lang_ext)
                     else:
                         continue

@@ -6,37 +6,42 @@ from pydriller import Repository
 # commit_hash = "738ecc8ff5626b4797eff801fd61103b4487f06e"
 commit_hash = "129854f34036e5e01e75a0c8c06d72aa6d8c57f6"
 github_url = f'https://github.com/ErnestFistozz/codecov-coveralls.git'
-
+print("Hello World")
 for commit in Repository(github_url, single=commit_hash).traverse_commits():
     parent_commit_methods = []
     child_commit_methods = []
-    for m in commit.modified_files:
-        if m.filename.endswith('.py'):
-            child_commit_methods.extend(
-                {
-                    'method_name': method.__dict__['name'],
-                    'complexity': method.__dict__['complexity']
-                }
-                for method in m.changed_methods
-            )
-            parent_commit_methods.extend(
-                {
-                    'method_name': method.__dict__['name'],
-                    'complexity': method.__dict__['complexity']
-                }
-                for method in m.methods_before
-            )
-        delta_complexity = []
-        for child_func in child_commit_methods:
-            for parent_func in parent_commit_methods:
-                if child_func['method_name'] == parent_func['method_name']:
-                    if parent_func['complexity'] != parent_func['complexity']:
-                        delta_complexity.append({
-                            'method_name': child_func['name'],
-                            'complexity': child_func['complexity'] - parent_func['complexity']
-                        })
-                else:
-                    delta_complexity.append({
-                        'method_name': child_func['name'],
-                        'complexity': child_func['complexity']
-                    })
+    print('Type : ', type(commit.modified_files))
+    files = [ m.filename for m in commit.modified_files]
+    print('Files: ', type(files))
+    print('File Type: ', type(files[0]))
+
+    # for m in commit.modified_files:
+    #     if m.filename.endswith('.py'):
+    #         child_commit_methods.extend(
+    #             {
+    #                 'method_name': method.__dict__['name'],
+    #                 'complexity': method.__dict__['complexity']
+    #             }
+    #             for method in m.changed_methods
+    #         )
+    #         parent_commit_methods.extend(
+    #             {
+    #                 'method_name': method.__dict__['name'],
+    #                 'complexity': method.__dict__['complexity']
+    #             }
+    #             for method in m.methods_before
+    #         )
+    #     delta_complexity = []
+    #     for child_func in child_commit_methods:
+    #         for parent_func in parent_commit_methods:
+    #             if child_func['method_name'] == parent_func['method_name']:
+    #                 if parent_func['complexity'] != parent_func['complexity']:
+    #                     delta_complexity.append({
+    #                         'method_name': child_func['name'],
+    #                         'complexity': child_func['complexity'] - parent_func['complexity']
+    #                     })
+    #             else:
+    #                 delta_complexity.append({
+    #                     'method_name': child_func['name'],
+    #                     'complexity': child_func['complexity']
+    #                 })
