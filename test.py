@@ -10,7 +10,7 @@ print("Hello World")
 for commit in Repository(github_url, single=commit_hash).traverse_commits():
     parent_commit_methods = []
     child_commit_methods = []
-    print('Type : ', type(commit.modified_files))
+    print('Type : ', type(commit.modified_files[0]))
     files = [ m.filename for m in commit.modified_files]
     print('Files: ', type(files))
     print('File Type: ', type(files[0]))
