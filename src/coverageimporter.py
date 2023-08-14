@@ -2,12 +2,11 @@ from .codecov import CodeCovCoverage
 from .coveralls import CoverallsCoverage
 from pydriller import Repository
 from .helpers import Helpers
-from .patch_files import PatchFiles
-from .patch_size import PatchSize
+from .patch_extracts import PatchExtracts
 
 class CoverageImporter:
 
-    def coveralls_data(self, coveralls: CoverallsCoverage, helpers: Helpers, lang_ext: str):
+    def coveralls_data(self, coveralls: CoverallsCoverage, helpers: Helpers):
         git_url = f'https://github.com/{coveralls.org()}/{coveralls.repo()}.git'
         builds = coveralls.collect_builds_data()
         
@@ -16,11 +15,10 @@ class CoverageImporter:
                 for commit in Repository(git_url, single = build['commit_sha']).traverse_commits():
                     coveralls_commit_files = coveralls.fetch_source_files(commit.hash)
                     executable_lines, executed_lines = 0 , 0
-                    patchFiles = PatchFiles()
-                    patchSize = PatchSize()
+                    patch_extracts = PatchExtracts()
                     if not isinstance(coveralls_commit_files, type(None)) and len(coveralls_commit_files) != 0:
                         for m in commit.modified_files:
-                            if m.filename.endswith(lang_ext) and helpers.index_finder(m.filename, coveralls_commit_files) != -1:
+                            if helpers.index_finder(m.filename, coveralls_commit_files) != -1:
                                 coveral_file_path = helpers.index_finder(m.filename, coveralls_commit_files)
                                 coverage_array = coveralls.source_coverage_array( commit.hash,
                                                 coveralls_commit_files[coveral_file_path])
@@ -30,9 +28,8 @@ class CoverageImporter:
                                     executed_lines += len([1 for line_number in modified_lines  if isinstance(coverage_array[line_number - 1], int) and coverage_array[line_number - 1] > 0])
                                 else:
                                     continue
-                        files = [ m.filename for m in commit.modified_files]
-                        patch_files = patchFiles.patch_files(files, lang_ext)
-                        patch_size = patchSize.patch_sizes(commit, lang_ext)
+                        patch_files = patch_extracts.patch_files(commit, coveralls_commit_files)
+                        patch_size = patch_extracts.patch_sizes(commit, coveralls_commit_files)
 
                     else:
                         continue
@@ -49,7 +46,7 @@ class CoverageImporter:
                 continue
         return builds
     
-    def codecov_data(self,  codecov: CodeCovCoverage, helpers: Helpers, lang_ext: str):
+    def codecov_data(self,  codecov: CodeCovCoverage, helpers: Helpers):
         git_url = f'https://github.com/{codecov.org()}/{codecov.repo()}.git'
         builds = codecov.collect_build_data()
         for build in builds:
@@ -57,11 +54,10 @@ class CoverageImporter:
                 for commit in Repository(git_url, single = build['commit_sha']).traverse_commits():
                     codecov_commit_files = codecov.fetch_source_file_names(commit.hash)
                     executable_lines, executed_lines = 0 , 0
-                    patchFiles = PatchFiles()
-                    patchSize = PatchSize()
+                    patch_extracts = PatchExtracts()
                     if not isinstance(codecov_commit_files, type(None)) and len(codecov_commit_files) != 0:
                         for m in commit.modified_files:
-                            if m.filename.endswith(lang_ext) and helpers.index_finder(m.filename, codecov_commit_files) != -1:
+                            if helpers.index_finder(m.filename, codecov_commit_files) != -1:
                                 coveral_file_path = helpers.index_finder(m.filename, codecov_commit_files)
                                 coverage_array = codecov.file_line_coverage_array( commit.hash,
                                                     codecov_commit_files[coveral_file_path])
@@ -75,9 +71,8 @@ class CoverageImporter:
                                     executable_lines += len(coverage_array)
                                 else:
                                     continue
-                        files = [ m.filename for m in commit.modified_files]
-                        patch_files = patchFiles.patch_files(files, lang_ext)
-                        patch_size = patchSize.patch_sizes(commit, lang_ext)
+                        patch_files = patch_extracts.patch_files(commit, codecov_commit_files)
+                        patch_size = patch_extracts.patch_sizes(commit, codecov_commit_files)
                     else:
                         continue
                 try:
