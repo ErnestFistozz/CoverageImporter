@@ -27,15 +27,12 @@ class Helpers:
                 csv_full_path = rf'C:\Users\ebmamba\Desktop\AzureDevOpsRepos{filename}'
         with open(csv_full_path, "a+") as outfile:
             csv_writer = csv.writer(outfile)
-            #csv_writer.writerow(["RepositoryName", "Branch" , "Date", "CommitHash", "OverallCoverage", "PatchCooverage", "PatchSize"])
-            #csv_writer.writerow(["RepositoryName", "Branch" , "Date", "CommitHash", "OverallCoverage", "PatchCooverage", "PatchSize"])
             for row in coverage:
                 try:
-                    csv_writer.writerow([row['repository_name'], row['branch'], Helpers.date_formatter(row['created_at']), row['commit_sha'], 
-                                         row['covered_percent'], row['patch_coverage'], 
-                                         row['test_files'], row['code_files'], row['test_code_files'], row['other_files'],
-                                         row['code_patch_size'], row['test_patch_size'], row['config_patch_size']
-                                         ])
+                    if not isinstance(row, dict):
+                        raise KeyError
+                    csv_writer.writerow([ Helpers.date_formatter(value) if
+                                         key.lower() == 'created_at' else value for key, value in row.items()])
                 except KeyError:
                     continue
     @classmethod
