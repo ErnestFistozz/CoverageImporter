@@ -10,7 +10,6 @@ class CoverallsCoverage(BaseCoverage):
 
     def total_builds_pages(self) -> int:
         url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page=1&branch={self.branch}'
-        #print(url)
         try:
             res = requests.get(url, verify=False)
             if res.status_code != 200:
