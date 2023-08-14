@@ -1,10 +1,13 @@
 from .base import Repositories
 from requests_html import HTMLSession
 import requests
+import urllib3
 
+urllib3.disable_warnings()
 class CoverallsRepository(Repositories):
-    def __init__(self, organisation: str):
+    def __init__(self, organisation: str, request_headers: dict):
         super().__init__(organisation)
+        self.request_headers = request_headers
     '''
         Method total number of paginations representing ALL pages with repositories for that Organisation in coveralls
         Coveralls.IO currently does not have an API for retrive all repositories covered  per organisation
@@ -14,10 +17,10 @@ class CoverallsRepository(Repositories):
             I will have to remove this as the base methods do not have this signature
         @return <int> --> total number of pages representing all repositories configured to have coveralls
     '''
-    def get_total_pages(self, request_headers: dict) -> int:
+    def get_total_pages(self) -> int:
         session = HTMLSession()
         url = f"https://coveralls.io/github/{self.organisation}?page=1"
-        res = session.get(url, headers=request_headers)
+        res = session.get(url, headers=self.request_headers, verify=False)
         page_elements = res.html.find('ul.pagination')
         if len(page_elements) == 0 or page_elements is None: 
             return 1
@@ -34,14 +37,14 @@ class CoverallsRepository(Repositories):
         @param <request_headers: str> --> computer specific request headers
         @return <list> --> returns a list of all repository names
     '''
-    def repositories(self, request_headers: str) -> list:
+    def repositories(self) -> list:
         start_page = 1
         repo_names = []
         total_pages = self.get_total_pages()
         while start_page <= total_pages:
             session = HTMLSession()
             url = f"https://coveralls.io/github/{self.organisation}?page={start_page}"
-            response = session.get(url, headers=request_headers)
+            response = session.get(url, headers=self.request_headers)
             page_elements = response.html.find('div.repoChartInfo')
             for repo in page_elements:
                 repository_name = repo.find('a')
@@ -50,7 +53,7 @@ class CoverallsRepository(Repositories):
                 else:
                     try:
                         gh_url = f'https://api.github.com/repos/{self.organisation}/{repo}'
-                        res = request_headers(gh_url)
+                        res = session.get(gh_url)
                         if res.status_code != 200:
                             raise (KeyError, requests.RequestException)
                         org_project_name = repository_name[1].find('a')
