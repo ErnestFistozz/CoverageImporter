@@ -23,7 +23,7 @@ class PatchExtracts:
         for m in commit.modified_files:
             if any(m.filename in filename  for filename in covered_files):
                 if 'test' in m.filename:
-                    code_count += m.added_lines + m.deleted_lines
+                    test_count += m.added_lines + m.deleted_lines
                 else:
                     code_count += m.added_lines + m.deleted_lines
         return {
