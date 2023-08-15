@@ -54,6 +54,7 @@ class CoverageImporter:
                 for commit in Repository(git_url, single = build['commit_sha']).traverse_commits():
                     codecov_commit_files = codecov.fetch_source_file_names(commit.hash)
                     executable_lines, executed_lines = 0 , 0
+                    overall_coverage = codecov.computed_overall_coverage(commit.hash)
                     patch_extracts = PatchExtracts()
                     if not isinstance(codecov_commit_files, type(None)) and len(codecov_commit_files) != 0:
                         for m in commit.modified_files:
@@ -78,8 +79,10 @@ class CoverageImporter:
                 try:
                     build['patch_coverage'] = round((executed_lines/executable_lines)*100, 3)
                     build['repository_name'] = f'{codecov.org()}/{codecov.repo()}'
+                    build['computed_coverage'] = overall_coverage
                 except ZeroDivisionError:
                     build['patch_coverage'] = 0.0
+                    build['computed_coverage'] = overall_coverage
                     build['repository_name'] = f'{codecov.org()}/{codecov.repo()}'
                 finally:
                     build.update(patch_files)
