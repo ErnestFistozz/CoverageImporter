@@ -3,6 +3,7 @@ from .coveralls import CoverallsCoverage
 from pydriller import Repository
 from .helpers import Helpers
 from .patch_extracts import PatchExtracts
+from crap_metric.commit_crap import CrapMetric
 
 class CoverageImporter:
 
@@ -16,6 +17,8 @@ class CoverageImporter:
                     coveralls_commit_files = coveralls.fetch_source_files(commit.hash)
                     executable_lines, executed_lines = 0 , 0
                     patch_extracts = PatchExtracts()
+                    crap_metric = CrapMetric()
+
                     if not isinstance(coveralls_commit_files, type(None)) and len(coveralls_commit_files) != 0:
                         for m in commit.modified_files:
                             if helpers.index_finder(m.filename, coveralls_commit_files) != -1:
@@ -30,7 +33,7 @@ class CoverageImporter:
                                     continue
                         patch_files = patch_extracts.patch_files(commit, coveralls_commit_files)
                         patch_size = patch_extracts.patch_sizes(commit, coveralls_commit_files)
-
+                        commit_crappiness = crap_metric.commit_crap_metric(commit, (executed_lines/executable_lines)*100)
                     else:
                         continue
                     dmm_commit_size = commit.dmm_unit_size
@@ -60,6 +63,7 @@ class CoverageImporter:
                     executable_lines, executed_lines = 0 , 0
                     overall_coverage = codecov.computed_overall_coverage(commit.hash)
                     patch_extracts = PatchExtracts()
+                    crap_metric = CrapMetric()
                     if not isinstance(codecov_commit_files, type(None)) and len(codecov_commit_files) != 0:
                         for m in commit.modified_files:
                             if helpers.index_finder(m.filename, codecov_commit_files) != -1:
@@ -79,6 +83,7 @@ class CoverageImporter:
                                     continue
                         patch_files = patch_extracts.patch_files(commit, codecov_commit_files)
                         patch_size = patch_extracts.patch_sizes(commit, codecov_commit_files)
+                        commit_crappiness = crap_metric.commit_crap_metric(commit, (executed_lines/executable_lines)*100)
                     else:
                         continue
                     dmm_commit_size = commit.dmm_unit_size
