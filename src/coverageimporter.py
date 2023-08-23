@@ -33,6 +33,10 @@ class CoverageImporter:
 
                     else:
                         continue
+                    dmm_commit_size = commit.dmm_unit_size
+                    dmm_commit_complexity = commit.dmm_unit_complexity
+                    dmm_commit_interface = commit.dmm_unit_interface
+                    delta_maintainibility_model = round((dmm_commit_size + dmm_commit_complexity + dmm_commit_interface)/3 , 3)
                 try:
                     build['patch_coverage'] = round((executed_lines/executable_lines)*100, 3)
                     build['repository_name'] = f'{coveralls.org()}/{coveralls.repo()}'
@@ -66,16 +70,21 @@ class CoverageImporter:
                                     modified_lines  = [ line_number[0] for line_number in m.diff_parsed['added'] ]
                                     for line in modified_lines:
                                         for line_coverage_arr in coverage_array:
-                                            if line == line_coverage_arr[0] and ( line_coverage_arr[1] == 0 or \
-                                                line_coverage_arr[0] == 2):
+                                            if line == line_coverage_arr[0]:
+                                                if  line_coverage_arr[1] == 0:
                                                     executed_lines += 1
-                                    executable_lines += len(coverage_array)
+                                                if line_coverage_arr[1] == 0 or line_coverage_arr[1] == 1 or line_coverage_arr[1] == 2:
+                                                    executable_lines += 1
                                 else:
                                     continue
                         patch_files = patch_extracts.patch_files(commit, codecov_commit_files)
                         patch_size = patch_extracts.patch_sizes(commit, codecov_commit_files)
                     else:
                         continue
+                    dmm_commit_size = commit.dmm_unit_size
+                    dmm_commit_complexity = commit.dmm_unit_complexity
+                    dmm_commit_interface = commit.dmm_unit_interface
+                    delta_maintainibility_model = round((dmm_commit_size + dmm_commit_complexity + dmm_commit_interface)/3 , 3)
                 try:
                     build['patch_coverage'] = round((executed_lines/executable_lines)*100, 3)
                     build['repository_name'] = f'{codecov.org()}/{codecov.repo()}'

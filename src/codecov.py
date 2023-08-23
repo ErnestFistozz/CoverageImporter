@@ -67,8 +67,6 @@ class CodeCovCoverage(BaseCoverage):
 				for file_line_coverage in file['line_coverage']:
 					if file_line_coverage[1] == 0:
 						covered_lines += 1
-					# if file_line_coverage[1] != 1: // Factors partial coverage as well
-					# 	coverage_with_patch += 1
 				executable_lines += len(file['line_coverage'])
 			return (covered_lines / executable_lines)*100
 		except (requests.RequestException, KeyError):
