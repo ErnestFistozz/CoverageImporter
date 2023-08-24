@@ -66,9 +66,9 @@ class CoverallsCoverage(BaseCoverage):
                         continue
             else:
                 source_files.extend( source_file['name'] for source_file in json.loads(res.json()['source_files']) )
+            return source_files
         except Exception:
             return []
-        return source_files
     
     def source_coverage_array(self, commit: str, filename: str) -> list:
         url = f'https://coveralls.io/builds/{commit}/source.json?filename={filename}'
