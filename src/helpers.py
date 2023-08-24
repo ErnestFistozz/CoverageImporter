@@ -24,7 +24,7 @@ class Helpers:
             case 'linux' | 'darwin':
                 csv_full_path = rf'/home/ernest/repositories/{filename}'
             case _:
-                csv_full_path = rf'C:\Users\ebmamba\Desktop\AzureDevOpsRepos{filename}'
+                csv_full_path = rf'C:\Users\ebmamba\Desktop\AzureDevOpsRepos\{filename}'
         with open(csv_full_path, "a+") as outfile:
             csv_writer = csv.writer(outfile)
             for row in coverage:
