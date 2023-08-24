@@ -20,6 +20,7 @@ class Helpers:
 
     @classmethod
     def save_into_file(cls, filename: str,  coverage :list) -> None:
+        print('I am saving infor to the file')
         csv_full_path = ''
         match platform.system().lower():
             case 'linux' | 'darwin':

@@ -3,7 +3,8 @@ from .coveralls import CoverallsCoverage
 from pydriller import Repository
 from .helpers import Helpers
 from .patch_extracts import PatchExtracts
-from crap_metric.commit_crap import CrapMetric
+from .crap_metric.commit_crap import CrapMetric
+import logging as log
 
 class CoverageImporter:
 
@@ -33,9 +34,9 @@ class CoverageImporter:
                     build.update(patch_files)
                     build.update(patch_size)                    
                     # delta maintainability model
-                    dmm_commit_size = commit.dmm_unit_size
-                    dmm_commit_complexity = commit.dmm_unit_complexity
-                    dmm_commit_interface = commit.dmm_unit_interface
+                    dmm_commit_size = commit.dmm_unit_size if not isinstance(commit.dmm_unit_size, type(None)) else 0
+                    dmm_commit_complexity = commit.dmm_unit_complexity if not isinstance(commit.dmm_unit_complexity, type(None)) else 0
+                    dmm_commit_interface = commit.dmm_unit_interfacing if not isinstance(commit.dmm_unit_interfacing, type(None)) else 0
                     delta_maintainibility_model = round((dmm_commit_size + dmm_commit_complexity + dmm_commit_interface)/3 , 3)
                     # CRAP Metric and Patch Coverage
                     if executable_lines == 0:
@@ -87,9 +88,10 @@ class CoverageImporter:
                     build.update(patch_files)
                     build.update(patch_size)
                     # delta maintainability model
-                    dmm_commit_size = commit.dmm_unit_size
-                    dmm_commit_complexity = commit.dmm_unit_complexity
-                    dmm_commit_interface = commit.dmm_unit_interface
+                    
+                    dmm_commit_size = commit.dmm_unit_size if not isinstance(commit.dmm_unit_size, type(None)) else 0
+                    dmm_commit_complexity = commit.dmm_unit_complexity if not isinstance(commit.dmm_unit_complexity, type(None)) else 0
+                    dmm_commit_interface = commit.dmm_unit_interfacing if not isinstance(commit.dmm_unit_interfacing, type(None)) else 0
                     delta_maintainibility_model = round((dmm_commit_size + dmm_commit_complexity + dmm_commit_interface)/3 , 3)
                     # commit crappines and patch coverage
                     if executable_lines == 0:
