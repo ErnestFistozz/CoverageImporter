@@ -15,7 +15,7 @@ class CoverageImporter:
             try:
                 for commit in Repository(git_url, single = build['commit_sha']).traverse_commits():
                     coveralls_commit_files = coveralls.fetch_source_files(commit.hash)
-                    executable_lines, executed_lines = 0 , 0
+                    executable_lines = executed_lines = 0 
                     patch_extracts = PatchExtracts()
                     crap_metric = CrapMetric()
 
@@ -60,7 +60,7 @@ class CoverageImporter:
             try:
                 for commit in Repository(git_url, single = build['commit_sha']).traverse_commits():
                     codecov_commit_files = codecov.fetch_source_file_names(commit.hash)
-                    executable_lines, executed_lines = 0 , 0
+                    executable_lines = executed_lines = 0 
                     overall_coverage = codecov.computed_overall_coverage(commit.hash)
                     patch_extracts = PatchExtracts()
                     crap_metric = CrapMetric()

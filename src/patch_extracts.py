@@ -3,7 +3,7 @@ from pydriller import Commit
 class PatchExtracts:
     	
     def patch_sizes(self, commit: Commit, covered_files: list[str]) -> dict:
-        code_patch_size, test_patch_size, config_patch_size = 0, 0, 0
+        code_patch_size = test_patch_size = config_patch_size = 0
         for m in commit.modified_files:
             if any(m.filename in filename  for filename in covered_files):
                 if 'test' in m.filename:
@@ -19,7 +19,7 @@ class PatchExtracts:
             }
 
     def patch_files(self, commit: Commit, covered_files: list[str]) -> dict:
-        code_count, test_count = 0, 0
+        code_count = test_count = 0 
         for m in commit.modified_files:
             if any(m.filename in filename  for filename in covered_files):
                 if 'test' in m.filename:
