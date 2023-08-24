@@ -3,6 +3,7 @@ import csv
 import os
 import platform
 import pandas as pd
+import subprocess
 class Helpers:
 
     @classmethod
@@ -24,7 +25,8 @@ class Helpers:
             case 'linux' | 'darwin':
                 csv_full_path = rf'/home/ernest/repositories/{filename}'
             case _:
-                csv_full_path = rf'C:\Users\ebmamba\Desktop\AzureDevOpsRepos\{filename}'
+                username = Helpers.determine_machine()
+                csv_full_path = rf'C:\Users\{username}\Desktop\AzureDevOpsRepos\{filename}'
         with open(csv_full_path, "a+") as outfile:
             csv_writer = csv.writer(outfile)
             for row in coverage:
@@ -50,6 +52,13 @@ class Helpers:
                     for index, row in df.iterrows()
                 ]
         return data
-                
+    @classmethod
+    def determine_machine(cls) -> str:
+        cmd = rf'$env:USERNAME'
+        result =  (subprocess.run(["powershell", "-Command", cmd],
+                            capture_output=True, shell=True).stdout)
+        data = result.decode('utf8').replace("'", '"')
+        return data
+    
 if __name__ == '__main__':
     print(__name__)
