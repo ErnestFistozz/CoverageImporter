@@ -12,11 +12,12 @@ class CoverallsCoverage(BaseCoverage):
         url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page=1&branch={self.branch}'
         try:
             res = requests.get(url, verify=False)
+            res.raise_for_status()
             if res.status_code != 200:
                 raise Exception
             return res.json()['pages']
         except Exception:
-            print('Could not retrieve data')
+            return 0
 
     def collect_builds_data(self) -> list[dict]:
         data = []
@@ -25,7 +26,8 @@ class CoverallsCoverage(BaseCoverage):
             for page in range(1, builds_pages + 1):
                 url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page={page}&branch={self.branch}'
                 try:
-                    res = requests.get(url, verify=False) 
+                    res = requests.get(url, verify=False)
+                    res.raise_for_status() 
                     if res.status_code != 200:
                         raise Exception
                     data.extend(   
@@ -47,14 +49,15 @@ class CoverallsCoverage(BaseCoverage):
         file_url = f"https://coveralls.io/builds/{commit_hash}/source_files.json"
         try:
             res = requests.get(file_url, verify=False)
+            res.raise_for_status()
             if res.status_code != 200:
                 raise Exception
             total_pages = res.json()['total_pages']
-
             if total_pages > 1:
                 for page in range(1, total_pages + 1):
                     page_url = f'{file_url}&page={page}'
                     result = requests.get(page_url, verify=False)
+                    result.raise_for_status()
                     try:
                         if result.status_code != 200:
                             raise Exception
@@ -64,18 +67,19 @@ class CoverallsCoverage(BaseCoverage):
             else:
                 source_files.extend( source_file['name'] for source_file in json.loads(res.json()['source_files']) )
         except Exception:
-            return None
+            return []
         return source_files
     
     def source_coverage_array(self, commit: str, filename: str) -> list:
         url = f'https://coveralls.io/builds/{commit}/source.json?filename={filename}'
         try:
             response = requests.get(url, verify=False)
+            response.raise_for_status()
             if response.status_code != 200:
                 raise Exception
             return response.json()
         except Exception:
-            return None
+            return []
                     
 if __name__ == '__main__':
     print(__name__)
