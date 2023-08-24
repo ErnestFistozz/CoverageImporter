@@ -45,7 +45,7 @@ class CodeCovCoverage(BaseCoverage):
 			full_file_names = [ file['name'] for file in res.json()['files']]
 			return full_file_names
 		except (requests.RequestException, KeyError):
-			return None
+			return []
 		
 	def file_line_coverage_array(self, commit: str, filename: str) -> list:
 		try:
@@ -55,21 +55,23 @@ class CodeCovCoverage(BaseCoverage):
 			data = [tuple(line_coverage) for file in res.json()['files'] if file['name'] == filename for line_coverage in file['line_coverage']]
 			return data
 		except (requests.RequestException, KeyError):
-			return None
+			return []
+		
 	def computed_overall_coverage(self, commit_id: str) -> float:
 		try:
 			url = f'https://codecov.io/api/v2/gh/{self.organisation}/repos/{self.repository}/report?sha={commit_id}&branch={self.branch}'
 			res = requests.get(url, verify=False)
 			res.raise_for_status()
 			source_files = res.json()['files']
-			executable_lines, covered_lines = 0, 0
+			executable_lines = covered_lines = 0
 			for file in source_files:
 				for file_line_coverage in file['line_coverage']:
 					if file_line_coverage[1] == 0:
 						covered_lines += 1
 				executable_lines += len(file['line_coverage'])
-			return (covered_lines / executable_lines)*100
+			return round((covered_lines / executable_lines)*100,3)
 		except (requests.RequestException, KeyError):
 			return 0.0
+		
 if __name__ == '__main__':
 	print(__name__)
