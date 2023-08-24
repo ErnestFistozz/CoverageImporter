@@ -1,7 +1,7 @@
 
 class CrapMetric:
     
-    def commit_crap_metric(commitInst, patch_coverage: float) -> float:
+    def commit_crap_metric(self,commitInst, patch_coverage: float) -> float:
         total_method_complexity = 0 
         for m in commitInst.modified_files:
             for changed_method in m.changed_methods:
