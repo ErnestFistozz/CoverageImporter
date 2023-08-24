@@ -49,7 +49,6 @@ class Helpers:
                 }
                     for index, row in df.iterrows()
                 ]
-
         return data
                 
 if __name__ == '__main__':
