@@ -1,2 +1,11 @@
 url,organisation,repository,language,branch
-https://github.com/apache/rocketmq.git,apache,rocketmq,java,master
+https://github.com/apache/commons-collections.git,apache,commons-collections,java,master
+https://github.com/apache/bookkeeper.git,apache,bookkeeper,java,master
+https://github.com/apache/commons-rng.git,apache,commons-rng,java,master
+https://github.com/apache/commons-fileupload.git,apache,commons-fileupload,java,master
+https://github.com/apache/servicecomb-java-chassis.git,apache,servicecomb-java-chassis,java,master
+https://github.com/apache/carbondata.git,apache,carbondata,java,master
+https://github.com/apache/commons-io.git,apache,commons-io,java,master
+https://github.com/apache/commons-compress.git,apache,commons-compress,java,master
+https://github.com/apache/commons-math.git,apache,commons-math,java,master
+https://github.com/apache/commons-codec.git,apache,commons-codec,java,master

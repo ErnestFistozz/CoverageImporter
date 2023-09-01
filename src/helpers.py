@@ -32,7 +32,7 @@ class Helpers:
             csv_writer = csv.writer(outfile)
             for row in coverage:
                 try:
-                    if not isinstance(row, dict):
+                    if not isinstance(row, dict) or 'patch_coverage' not in row: # This filters all commits which could not be checked out by pydriller
                         raise KeyError
                     csv_writer.writerow([ Helpers.date_formatter(value) if
                                          key.lower() == 'created_at' else value for key, value in row.items()])
