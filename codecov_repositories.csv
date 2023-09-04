@@ -1,5 +1,4 @@
 url,organisation,repository,language,branch
-https://github.com/apache/axis-axis2-java-core.git,apache,axis-axis2-java-core,java,master
 https://github.com/apache/ws-axiom.git,apache,ws-axiom,java,master
 https://github.com/apache/commons-collections.git,apache,commons-collections,java,master
 https://github.com/apache/commons-geometry.git,apache,commons-geometry,java,master
