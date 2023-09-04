@@ -12,7 +12,7 @@ class CodeCovCoverage(BaseCoverage):
 			res  = requests.get(url, verify=False)
 			res.raise_for_status()
 			return res.json()['total_pages']
-		except (requests.RequestException, KeyError):
+		except Exception:
 			return 0
 
 	def collect_build_data(self) -> list:
@@ -44,7 +44,7 @@ class CodeCovCoverage(BaseCoverage):
 			res.raise_for_status()
 			full_file_names = [ file['name'] for file in res.json()['files']]
 			return full_file_names
-		except (requests.RequestException, KeyError):
+		except Exception:
 			return []
 		
 	def file_line_coverage_array(self, commit: str, filename: str) -> list:
@@ -54,7 +54,7 @@ class CodeCovCoverage(BaseCoverage):
 			res.raise_for_status()
 			data = [tuple(line_coverage) for file in res.json()['files'] if file['name'] == filename for line_coverage in file['line_coverage']]
 			return data
-		except (requests.RequestException, KeyError):
+		except Exception:
 			return []
 		
 	def computed_overall_coverage(self, commit_id: str) -> float:
@@ -70,7 +70,7 @@ class CodeCovCoverage(BaseCoverage):
 						covered_lines += 1
 				executable_lines += len(file['line_coverage'])
 			return round((covered_lines / executable_lines)*100,3)
-		except (requests.RequestException, KeyError):
+		except Exception:
 			return 0.0
 		
 if __name__ == '__main__':
