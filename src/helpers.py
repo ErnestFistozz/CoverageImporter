@@ -33,10 +33,10 @@ class Helpers:
             for row in coverage:
                 try:
                     if not isinstance(row, dict) or 'patch_coverage' not in row: # This filters all commits which could not be checked out by pydriller
-                        raise KeyError
+                        raise Exception
                     csv_writer.writerow([ Helpers.date_formatter(value) if
                                          key.lower() == 'created_at' else value for key, value in row.items()])
-                except KeyError:
+                except Exception:
                     continue
     @classmethod
     def read_from_csv(cls, filename: str) -> list:
