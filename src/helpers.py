@@ -7,9 +7,9 @@ import subprocess
 class Helpers:
 
     @classmethod
-    def index_finder(cls, search_file: str, files: list[str]) -> int:
+    def index_finder(cls, search_word: str, files: list[str]) -> int:
         for index, word in enumerate(files):
-            if search_file in word:
+            if search_word.lower() in word.lower():
                 return index
         return -1
     

@@ -20,8 +20,8 @@ class CoverageImporter:
                     crap_metric = CrapMetric()
                     if coveralls_commit_files:
                         for m in commit.modified_files:
-                            if helpers.index_finder(m.filename, coveralls_commit_files) != -1:
-                                coveral_file_path = helpers.index_finder(m.filename, coveralls_commit_files)
+                            coveral_file_path = helpers.index_finder(m.filename, coveralls_commit_files)
+                            if coveral_file_path != -1:
                                 coverage_array = coveralls.source_coverage_array( commit.hash,
                                                 coveralls_commit_files[coveral_file_path])
                                 if coverage_array: # if the coverage array is not empty
@@ -40,10 +40,10 @@ class CoverageImporter:
                     delta_maintainibility_model = round((dmm_commit_size + dmm_commit_complexity + dmm_commit_interface)/3 , 3)
                     # CRAP Metric and Patch Coverage
                     if executable_lines == 0:
-                        build['patch_coverage'] = 0.0
-                        commit_crappiness = crap_metric.commit_crap_metric(commit,0.0)
+                        build['patch_coverage'] = 0
+                        commit_crappiness = crap_metric.commit_dmm_crap_metric(dmm_commit_complexity,0)
                     else:
-                        commit_crappiness = crap_metric.commit_crap_metric(commit, (executed_lines/executable_lines)*100)
+                        commit_crappiness = crap_metric.commit_dmm_crap_metric(dmm_commit_complexity, (executed_lines/executable_lines)*100)
                         build['patch_coverage'] = round((executed_lines/executable_lines)*100, 3)
                     # update dictionary to have delta maintainability and crap metric
                     build['repository_name'] = f'{coveralls.org()}/{coveralls.repo()}'
@@ -62,16 +62,18 @@ class CoverageImporter:
         for build in builds:
             try:
                 for commit in Repository(git_url, single = build['commit_sha']).traverse_commits():
-                    codecov_commit_files = codecov.fetch_source_file_names(commit.hash)
+                    commit_report = codecov.commit_report(commit.hash) # will call the report API and return a response
+                    codecov_commit_files = codecov.fetch_source_file_names(commit_report)
+                    overall_coverage = codecov.computed_overall_coverage(commit_report)
+                    patch_coverage_from_api = codecov.api_patch_coverage(commit_report)
                     executable_lines = executed_lines = commit_crappiness = 0 
-                    overall_coverage = codecov.computed_overall_coverage(commit.hash)
                     patch_extracts = PatchExtracts()
                     crap_metric = CrapMetric()
                     if codecov_commit_files:
                         for m in commit.modified_files:
-                            if helpers.index_finder(m.filename, codecov_commit_files) != -1:
-                                coveral_file_path = helpers.index_finder(m.filename, codecov_commit_files)
-                                coverage_array = codecov.file_line_coverage_array( commit.hash,
+                            coveral_file_path = helpers.index_finder(m.filename, codecov_commit_files)
+                            if coveral_file_path != -1:
+                                coverage_array = codecov.file_line_coverage_array( commit_report,
                                                     codecov_commit_files[coveral_file_path])
                                 if coverage_array:
                                     modified_lines  = [ line_number[0] for line_number in m.diff_parsed['added'] ]
@@ -95,13 +97,14 @@ class CoverageImporter:
                     delta_maintainibility_model = round((dmm_commit_size + dmm_commit_complexity + dmm_commit_interface)/3 , 3)
                     # commit crappines and patch coverage
                     if executable_lines == 0:
-                        commit_crappiness = crap_metric.commit_crap_metric(commit, 0.0)
-                        build['patch_coverage'] = 0.0
+                        commit_crappiness = crap_metric.commit_dmm_crap_metric(dmm_commit_complexity, 0)
+                        build['patch_coverage'] = 0
                     else:
                         build['patch_coverage'] = round((executed_lines/executable_lines)*100, 3)
-                        commit_crappiness = crap_metric.commit_crap_metric(commit, (executed_lines/executable_lines)*100)
+                        commit_crappiness = crap_metric.commit_dmm_crap_metric(dmm_commit_complexity, (executed_lines/executable_lines)*100)
                     # update dictionary to have delta maintainability model and crap metric
                     build['repository_name'] = f'{codecov.org()}/{codecov.repo()}'
+                    build['api_patch_coverage'] = patch_coverage_from_api
                     build['computed_coverage'] = overall_coverage
                     build['dmm_unit_size'] = dmm_commit_size
                     build['dmm_unit_complexity'] = dmm_commit_complexity

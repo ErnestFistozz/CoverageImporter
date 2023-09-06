@@ -9,7 +9,7 @@ class CoverallsCoverage(BaseCoverage):
         super().__init__(organisation, repository, branch)
 
     def total_builds_pages(self) -> int:
-        url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page=1&branch={self.branch}'
+        url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page=1&branch={self.branch}&per_page=10'
         try:
             res = requests.get(url, verify=False)
             res.raise_for_status()
@@ -24,7 +24,7 @@ class CoverallsCoverage(BaseCoverage):
         builds_pages = self.total_builds_pages()
         if builds_pages != 0:
             for page in range(1, builds_pages + 1):
-                url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page={page}&branch={self.branch}'
+                url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page={page}&branch={self.branch}&per_page=10'
                 try:
                     res = requests.get(url, verify=False)
                     res.raise_for_status() 
@@ -55,7 +55,7 @@ class CoverallsCoverage(BaseCoverage):
             total_pages = res.json()['total_pages']
             if total_pages > 1:
                 for page in range(1, total_pages + 1):
-                    page_url = f'{file_url}&page={page}'
+                    page_url = f'{file_url}?&page={page}'
                     result = requests.get(page_url, verify=False)
                     result.raise_for_status()
                     try:
