@@ -34,8 +34,8 @@ class CoverallsCoverage(BaseCoverage):
                         {
                         'created_at': build['created_at'],
                         'commit_sha': build['commit_sha'],
-                        'coverage_change': build['coverage_change'],
-                        'covered_percent': build['covered_percent'],
+                        'coverage_change': round(build['coverage_change'], 3),
+                        'covered_percent': round(build['covered_percent'], 3),
                         'branch': build['branch']
                     } 
                         for build in res.json()['builds']

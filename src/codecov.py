@@ -28,7 +28,7 @@ class CodeCovCoverage(BaseCoverage):
 						{
 							'created_at': build['timestamp'],
 							'commit_sha': build['commitid'],
-							'covered_percent': build['totals']['coverage'],
+							'covered_percent': round(build['totals']['coverage'], 3),
 							'branch': build['branch']
 						} 
 						for build in res.json()['results']
