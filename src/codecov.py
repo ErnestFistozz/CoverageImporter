@@ -88,7 +88,8 @@ class CodeCovCoverage(BaseCoverage):
 			try:
 				if not isinstance(commit_report['totals']['diff'], type(None)):
 					if isinstance(commit_report['totals']['diff'], list):
-						return float(commit_report['totals']['diff'][5])
+						if not isinstance(commit_report['totals']['diff'][5], type(None)):
+							return float(commit_report['totals']['diff'][5])
 			except Exception:
 				return 0		
 		return 0
