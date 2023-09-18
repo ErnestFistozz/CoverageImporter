@@ -16,16 +16,25 @@ header_names = [ 'date', 'commitHash', 'coverage_change', 'coverage', 'branch',
                 'dmm_unit_complexity', 'dmm_unit_interface', 'dmm', 'crap_metric'
                 ]
 
-df = pd.read_csv('coverallsdata.csv', encoding='utf-8', header=None)
+#df = pd.read_csv('coverallsdata.csv', encoding='utf-8', header=None)
 
-projects = [ "commons-collections", "bookkeeper", "commons-rng",
-            "commons-fileupload", "servicecomb-java-chassis", "carbondata",
-            "commons-io", "commons-compress", "commons-math", "commons-codec"]
+# projects = [ "commons-collections", "bookkeeper", "commons-rng",
+#             "commons-fileupload", "servicecomb-java-chassis", "carbondata",
+#             "commons-io", "commons-compress", "commons-math", "commons-codec"]
+projects = [ "apache/commons-collections", "apache/commons-io", "apache/commons-math",
+            "apache/commons-validator", "ARMmbed/mbed-ls", "bitwalker/timex", "broadinstitute/firecloud-orchestration",
+            "containers/virtcontainers", "coreos/alb-ingress-controller", "damianszczepanik/cucumber-reporting",
+            "dask/dask", "doanduyhai/Achilles", "dropwizard/dropwizard", "F5Networks/k8s-bigip-ctlr", "Gillespie59/eslint-plugin-angular",
+            "HazyResearch/deepdive", "ikawaha/kagome", "ilovepi/Compiler", "jknack/handlebars.java",
+            "joel-costigliola/assertj-core", "mailgun/kafka-pixy", "MITLibraries/topichub", "platinumazure/eslint-plugin-qunit",
+            "PragTob/benchee", "ShiftForward/apso", "spatialmodel/inmap", "terasolunaorg/terasoluna-gfw" ]
 
+# df = pd.read_csv('large_scale_paper_coveralls_result.csv', encoding='utf-8', names=header_names)
+# print(df['repository_name'])
 distibution_data = []
 for project in projects:
-    df = pd.read_csv('coverallsdata.csv', encoding='utf-8', names=header_names)  
-    filtered = df[ df['repository_name'] == f'apache/{project}']
+    df = pd.read_csv('large_scale_paper_coveralls_result.csv', encoding='utf-8', names=header_names)  
+    filtered = df.query("repository_name == @project")   #[ df['repository_name'] == project]
     zero = []
     zero_to_25 = []
     twenty5_to_50 = []
@@ -49,15 +58,15 @@ for project in projects:
              seventy5_to_100.append(commit_patch)
         elif  commit_patch == 100:
             hundred.append(commit_patch)
-
-    distibution_data.append([ project,         # os.path.splitext(project[0])[0].strip('CommitsDistMaster'),
-                            (len(zero)/len(filtered))*100, 
-                            (len(zero_to_25)/len(filtered))*100, 
-                            (len(twenty5_to_50)/len(filtered))*100,
-                            (len(fifty)/len(filtered))*100, 
-                            (len(fifty_to_75)/len(filtered))*100,
-                            (len(seventy5_to_100)/len(filtered))*100,
-                            (len(hundred)/len(filtered))*100])
+    if len(filtered) > 0:
+        distibution_data.append([ project,         # os.path.splitext(project[0])[0].strip('CommitsDistMaster'),
+                                (len(zero)/len(filtered))*100, 
+                                (len(zero_to_25)/len(filtered))*100, 
+                                (len(twenty5_to_50)/len(filtered))*100,
+                                (len(fifty)/len(filtered))*100, 
+                                (len(fifty_to_75)/len(filtered))*100,
+                                (len(seventy5_to_100)/len(filtered))*100,
+                                (len(hundred)/len(filtered))*100])
 
 data_frame = pd.DataFrame(distibution_data, columns=['repositories', '0' ,'0-25', '25-50', '50', '50-75', '75-100', '100'])
 data_frame.plot(x='repositories', kind='barh', stacked=True

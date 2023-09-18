@@ -30,13 +30,19 @@ def plot_graphs(filename, header_names):
     plt.show()
 
 if __name__ == '__main__':
-    headers = [ 'date', 'commitHash', 'api_coverage', 'branch', 
+    # headers = [ 'date', 'commitHash', 'api_coverage', 'branch', 
+    #             'code_patch_size', 'test_patch_size', 'config_patch_size',
+    #             'test_files', 'code_files', 'test_code_files', 'other_files',
+    #             'patch_coverage', 'repository_name', 'computed_coverage', 'dmm_unit_size',
+    #             'dmm_unit_complexity', 'dmm_unit_interface', 'dmm', 'crap_metric'
+    #             ]
+    headers = [ 'date', 'commitHash', 'coverage_change', 'coverage', 'branch',
                 'code_patch_size', 'test_patch_size', 'config_patch_size',
                 'test_files', 'code_files', 'test_code_files', 'other_files',
-                'patch_coverage', 'repository_name', 'computed_coverage', 'dmm_unit_size',
+                'patch_coverage', 'repository_name', 'dmm_unit_size',
                 'dmm_unit_complexity', 'dmm_unit_interface', 'dmm', 'crap_metric'
                 ]
-    plot_graphs('codecovdata.csv', headers)
+    plot_graphs('large_scale_paper_coveralls_result.csv', headers)
     #  df = pd.read_csv('codecovdata.csv', names = headers)
     #  print(df['patch_coverage'])
 
