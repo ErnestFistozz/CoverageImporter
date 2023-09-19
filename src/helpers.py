@@ -4,6 +4,8 @@ import os
 import platform
 import pandas as pd
 import subprocess
+
+
 class Helpers:
 
     @classmethod
@@ -12,16 +14,15 @@ class Helpers:
             if search_word.lower() in word.lower():
                 return index
         return -1
-    
+
     @classmethod
     def date_formatter(cls, timestamp: str):
         formated_timestamp = datetime.fromisoformat(timestamp[:-1]).astimezone(timezone.utc)
         return formated_timestamp.strftime('%Y-%m-%d %H:%M:%S')
 
     @classmethod
-    def save_into_file(cls, filename: str,  coverage :list) -> None:
+    def save_into_file(cls, filename: str, coverage: list) -> None:
         print('I am saving infor to the file')
-        csv_full_path = ''
         match platform.system().lower():
             case 'linux' | 'darwin':
                 csv_full_path = rf'/home/ernest/repositories/{filename}'
@@ -32,34 +33,38 @@ class Helpers:
             csv_writer = csv.writer(outfile)
             for row in coverage:
                 try:
-                    if not isinstance(row, dict) or 'patch_coverage' not in row: # This filters all commits which could not be checked out by pydriller
+                    if not isinstance(row,
+                                      dict) or 'patch_coverage' not in row:  # This filters all commits which could
+                        # not be checked out by pydriller
                         raise Exception
-                    csv_writer.writerow([ Helpers.date_formatter(value) if
+                    csv_writer.writerow([Helpers.date_formatter(value) if
                                          key.lower() == 'created_at' else value for key, value in row.items()])
                 except Exception:
                     continue
+
     @classmethod
     def read_from_csv(cls, filename: str) -> list:
         if not os.path.exists(filename):
             raise FileNotFoundError
         else:
-            df = pd.read_csv(filename , header=0, delimiter=',')
+            df = pd.read_csv(filename, header=0, delimiter=',')
             data = [{
                 'repo': row['repository'],
-                'main_branch': row['branch'],
                 'org': row['organisation'],
                 'language': row['language'],
-                }
-                    for index, row in df.iterrows()
-                ]
+            }
+                for index, row in df.iterrows()
+            ]
         return data
+
     @classmethod
     def determine_machine(cls) -> str:
         cmd = rf'$env:USERNAME'
-        result =  (subprocess.run(["powershell", "-Command", cmd],
-                            capture_output=True, shell=True).stdout)
+        result = (subprocess.run(["powershell", "-Command", cmd],
+                                 capture_output=True, shell=True).stdout)
         data = result.decode('utf8').replace("'", '"')
         return data
-    
+
+
 if __name__ == '__main__':
     print(__name__)
