@@ -10,4 +10,4 @@ if __name__ == '__main__':
     for coveralls_repo in coveralls_repositories:
         coveralls = CoverallsCoverage(coveralls_repo['org'], coveralls_repo['repo'])
         data = coverage_importer.coveralls_data(coveralls, helpers)
-        helpers.save_into_file('apache_coveralls_test.csv', data)
+        helpers.save_into_file('apache_coveralls_test_results.csv', data)
