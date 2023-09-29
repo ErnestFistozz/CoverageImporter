@@ -42,7 +42,8 @@ if __name__ == '__main__':
                 'patch_coverage', 'repository_name', 'dmm_unit_size',
                 'dmm_unit_complexity', 'dmm_unit_interface', 'dmm', 'crap_metric'
                 ]
-    plot_graphs('large_scale_paper_coveralls_result.csv', headers)
+    #plot_graphs('large_scale_paper_coveralls_result.csv', headers)
+    plot_graphs('apache_coveralls_test_results.csv', headers)
     #  df = pd.read_csv('codecovdata.csv', names = headers)
     #  print(df['patch_coverage'])
 
