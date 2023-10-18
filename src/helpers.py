@@ -25,7 +25,8 @@ class Helpers:
         print('I am saving infor to the file')
         match platform.system().lower():
             case 'linux' | 'darwin':
-                csv_full_path = rf'/home/ernest/repositories/{filename}'
+                # csv_full_path = rf'/home/ernest/repositories/{filename}' # own machine
+                csv_full_path = rf'/home/shoppies/repositories/{filename}'
             case _:
                 username = Helpers.determine_machine()
                 csv_full_path = rf'C:\Users\{username}\Desktop\AzureDevOpsRepos\{filename}'

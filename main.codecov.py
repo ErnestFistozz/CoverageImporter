@@ -10,4 +10,4 @@ if __name__ == '__main__':
     for codecov_repo in codecov_repositories:
         codecov = CodeCovCoverage(codecov_repo['org'], codecov_repo['repo'])
         data = coverage_importer.codecov_data(codecov, helpers)
-        helpers.save_into_file('large_scale_paper_codecov_result.csv', data)
+        helpers.save_into_file('codecov_coverage_results.csv', data)

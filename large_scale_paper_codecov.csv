@@ -1,10 +1,4 @@
 url,organisation,repository,language
-https://github.com/apache/commons-collections.git,apache,commons-collections,java
-https://github.com/apache/commons-io.git,apache,commons-io,java
-https://github.com/apache/commons-math.git,apache,commons-math,java
-https://github.com/apache/commons-validator.git,apache,commons-validator,java
-https://github.com/apache/commons-dbcp.git,apache,commons-dbcp,java
-https://github.com/apache/commons-jxpath.git,apache,commons-jxpath,java
 https://github.com/damianszczepanik/cucumber-reporting.git,damianszczepanik,cucumber-reporting,java
 https://github.com/dask/dask.git,dask,dask,java
 https://github.com/jknack/handlebars.java.git,jknack,handlebars.java,java
