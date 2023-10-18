@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 
+
 class BaseCoverage:
     def __init__(self, organisation: str, repository: str) -> None:
         self.organisation = organisation
