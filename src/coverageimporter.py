@@ -1,16 +1,16 @@
-from .codecov import CodeCovCoverage
-from .coveralls import CoverallsCoverage
+from src.codecov import CodeCovCoverage
+from src.coveralls import CoverallsCoverage
 from pydriller import Repository
-from .helpers import Helpers
-from .patch_extracts import PatchExtracts
-from .crap_metric.commit_crap import CrapMetric
+from src.helpers import Helpers
+from src.patch_extracts import PatchExtracts
+from src.crap_metric.commit_crap import CrapMetric
 
 
 class CoverageImporter:
 
     @staticmethod
     def coveralls_data(coveralls: CoverallsCoverage, helpers: Helpers):
-        git_url = f'https://github.com/{coveralls.org()}/{coveralls.repo()}.git'
+        git_url = 'https://github.com/{}/{}.git'.format(coveralls.org(), coveralls.repo())
         builds = coveralls.collect_builds_data()
         for build in builds:
             try:
@@ -68,7 +68,7 @@ class CoverageImporter:
 
     @staticmethod
     def codecov_data(codecov: CodeCovCoverage, helpers: Helpers):
-        git_url = f'https://github.com/{codecov.org()}/{codecov.repo()}.git'
+        git_url = 'https://github.com/{}/{}.git'.format(codecov.org(), codecov.repo())
         builds = codecov.collect_build_data()
         for build in builds:
             try:

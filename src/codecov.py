@@ -1,5 +1,5 @@
 import requests
-from .basecoverage import BaseCoverage
+from src.basecoverage import BaseCoverage
 
 
 class CodeCovCoverage(BaseCoverage):
