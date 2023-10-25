@@ -1,6 +1,0 @@
-url,organisation,repository,language
-https://github.com/apache/commons-collections.git,apache,commons-collections,java
-https://github.com/apache/commons-io.git,apache,commons-io,java
-https://github.com/apache/commons-math.git,apache,commons-math,java
-https://github.com/ARMmbed/mbed-ls.git,ARMmbed,mbed-ls,java
-https://github.com/bitwalker/timex.git,bitwalker,timex,java

@@ -1,6 +1,0 @@
-url,organisation,repository,language
-https://github.com/broadinstitute/firecloud-orchestration.git,broadinstitute,firecloud-orchestration,java
-https://github.com/containers/virtcontainers.git,containers,virtcontainers,java
-https://github.com/coreos/alb-ingress-controller.git,coreos,alb-ingress-controller,java
-https://github.com/damianszczepanik/cucumber-reporting.git,damianszczepanik,cucumber-reporting,java
-https://github.com/dask/dask.git,dask,dask,java

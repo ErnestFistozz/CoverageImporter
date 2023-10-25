@@ -46,7 +46,8 @@ class CoverallsCoverage(BaseCoverage):
                     continue
         return data
 
-    def fetch_source_files(self, commit_hash: str) -> list[str]:
+    @staticmethod
+    def fetch_source_files(commit_hash: str) -> list[str]:
         source_files = []
         file_url = f"https://coveralls.io/builds/{commit_hash}/source_files.json"
         try:
@@ -72,7 +73,8 @@ class CoverallsCoverage(BaseCoverage):
         except Exception:
             return []
 
-    def source_coverage_array(self, commit: str, filename: str) -> list:
+    @staticmethod
+    def source_coverage_array(commit: str, filename: str) -> list:
         url = f'https://coveralls.io/builds/{commit}/source.json?filename={filename}'
         try:
             response = requests.get(url, verify=False)

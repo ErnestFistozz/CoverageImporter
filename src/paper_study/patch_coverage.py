@@ -23,6 +23,7 @@ class LargeScaleStudyPatchCoverage:
             fifty_to_seventy_five_bin = []
             seventy_five_to_hundred = []
             hundred_bin = []
+            unclassified = []
             filtered = data_frame.query("repo == @project")
             for index, row in filtered.iterrows():
                 newHitLines = int(row['newHitLines'])
@@ -41,7 +42,7 @@ class LargeScaleStudyPatchCoverage:
 
                 if current_patch == 0:
                     zero_bin.append(current_patch)
-                elif 0 < current_patch < 25:
+                elif 0 < current_patch <= 25:
                     zero_to_twenty_five_bin.append(current_patch)
                 elif 25 < current_patch <= 50:
                     twenty_five_to_fifty_bin.append(current_patch)
@@ -51,7 +52,11 @@ class LargeScaleStudyPatchCoverage:
                     seventy_five_to_hundred.append(current_patch)
                 elif current_patch == 100:
                     hundred_bin.append(current_patch)
+                else:
+                    unclassified.append(current_patch)
+                    print(current_patch)
             print(f'Project Name: {project} = {len(filtered)}')
+            print(f'Unclassified: {len(unclassified)}')
             if len(filtered) > 0:
                 data.append([project,
                              (len(zero_bin) / len(filtered)) * 100,

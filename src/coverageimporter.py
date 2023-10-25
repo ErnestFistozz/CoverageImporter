@@ -9,7 +9,8 @@ import logging as log
 
 class CoverageImporter:
 
-    def coveralls_data(self, coveralls: CoverallsCoverage, helpers: Helpers):
+    @staticmethod
+    def coveralls_data(coveralls: CoverallsCoverage, helpers: Helpers):
         git_url = f'https://github.com/{coveralls.org()}/{coveralls.repo()}.git'
         builds = coveralls.collect_builds_data()
         for build in builds:
@@ -66,7 +67,8 @@ class CoverageImporter:
                 continue
         return builds
 
-    def codecov_data(self, codecov: CodeCovCoverage, helpers: Helpers):
+    @staticmethod
+    def codecov_data(codecov: CodeCovCoverage, helpers: Helpers):
         git_url = f'https://github.com/{codecov.org()}/{codecov.repo()}.git'
         builds = codecov.collect_build_data()
         for build in builds:

@@ -58,6 +58,11 @@ class Helpers:
             ]
         return data
 
+    @staticmethod
+    def repositories(file_name: str) -> list:
+        with open(file_name, 'r') as file:
+            return [line.split()[0].split("/") for line in file]
+
     @classmethod
     def determine_machine(cls) -> str:
         cmd = rf'$env:USERNAME'

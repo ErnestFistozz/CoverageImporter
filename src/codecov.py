@@ -48,7 +48,8 @@ class CodeCovCoverage(BaseCoverage):
                 return []
         return []
 
-    def file_line_coverage_array(self, commit_report, filename: str) -> list:
+    @staticmethod
+    def file_line_coverage_array(commit_report, filename: str) -> list:
         if commit_report:
             try:
                 data = [tuple(line_coverage) for file in commit_report['files'] if
@@ -58,7 +59,8 @@ class CodeCovCoverage(BaseCoverage):
                 return []
         return []
 
-    def computed_overall_coverage(self, commit_report) -> float:
+    @staticmethod
+    def computed_overall_coverage(commit_report) -> float:
         if commit_report:
             try:
                 source_files = commit_report['files']
@@ -86,7 +88,8 @@ class CodeCovCoverage(BaseCoverage):
             return {}  # returns an empty dictionary
 
     # method to fetch the patch returned from REST API
-    def api_patch_coverage(self, commit_report) -> float:
+    @staticmethod
+    def api_patch_coverage(commit_report) -> float:
         if commit_report:
             try:
                 if not isinstance(commit_report['totals']['diff'], type(None)):
