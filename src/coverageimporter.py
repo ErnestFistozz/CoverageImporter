@@ -4,7 +4,6 @@ from pydriller import Repository
 from .helpers import Helpers
 from .patch_extracts import PatchExtracts
 from .crap_metric.commit_crap import CrapMetric
-import logging as log
 
 
 class CoverageImporter:
@@ -126,7 +125,7 @@ class CoverageImporter:
                             commit_crappiness = crap_metric.commit_dmm_crap_metric(dmm_commit_complexity, (
                                     executed_lines / executable_lines) * 100)
                         # update dictionary to have delta maintainability model and crap metric
-                        build['repository_name'] = f'{codecov.org()}/{codecov.repo()}'
+                        build['repository_name'] = '{}/{}'.format(codecov.org(), codecov.repo())
                         build['api_patch_coverage'] = patch_coverage_from_api
                         build['computed_coverage'] = overall_coverage
                         build['dmm_unit_size'] = dmm_commit_size

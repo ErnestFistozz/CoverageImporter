@@ -29,7 +29,7 @@ class Helpers:
                 csv_full_path = rf'/home/shoppies/repositories/{filename}'
             case _:
                 username = Helpers.determine_machine()
-                csv_full_path = rf'C:\Users\{username}\Desktop\AzureDevOpsRepos\{filename}'
+                csv_full_path = rf'C:\Users\ebmamba\Desktop\AzureDevOpsRepos\{filename}'
         with open(csv_full_path, "a+") as outfile:
             csv_writer = csv.writer(outfile)
             for row in coverage:
@@ -65,7 +65,7 @@ class Helpers:
 
     @classmethod
     def determine_machine(cls) -> str:
-        cmd = rf'$env:USERNAME'
+        cmd = '$env:USERNAME'
         result = (subprocess.run(["powershell", "-Command", cmd],
                                  capture_output=True, shell=True).stdout)
         data = result.decode('utf8').replace("'", '"')
