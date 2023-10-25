@@ -40,20 +40,21 @@ class CodeCovCoverage(BaseCoverage):
         return data
 
     @staticmethod
-    def fetch_source_file_names(commit_report) -> list[str]:
-        if commit_report:
+    def fetch_source_file_names(commit_details: dict) -> list[str]:
+        if commit_details:
             try:
-                full_file_names = [file['name'].lower() for file in commit_report['files']]
+                files = commit_details['files']
+                full_file_names = [file['name'].lower() for file in files]
                 return full_file_names
             except Exception:  # Most likely exception is KeyError -> But all exceptions will be handled the same way
                 return []
         return []
 
     @staticmethod
-    def file_line_coverage_array(commit_report, filename: str) -> list:
-        if commit_report:
+    def file_line_coverage_array(commit_details: dict, filename: str) -> list:
+        if commit_details:
             try:
-                data = [tuple(line_coverage) for file in commit_report['files'] if
+                data = [tuple(line_coverage) for file in commit_details['files'] if
                         file['name'].lower() == filename.lower() for line_coverage in file['line_coverage']]
                 return data
             except Exception:
@@ -61,10 +62,10 @@ class CodeCovCoverage(BaseCoverage):
         return []
 
     @staticmethod
-    def computed_overall_coverage(commit_report) -> float:
-        if commit_report:
+    def computed_overall_coverage(commit_details: dict) -> float:
+        if commit_details:
             try:
-                source_files = commit_report['files']
+                source_files = commit_details['files']
                 executable_lines = covered_lines = 0
                 for file in source_files:
                     for file_line_coverage in file['line_coverage']:
@@ -90,13 +91,13 @@ class CodeCovCoverage(BaseCoverage):
 
     # method to fetch the patch returned from REST API
     @staticmethod
-    def api_patch_coverage(commit_report) -> float:
-        if commit_report:
+    def api_patch_coverage(commit_details) -> float:
+        if commit_details:
             try:
-                if not isinstance(commit_report['totals']['diff'], type(None)):
-                    if isinstance(commit_report['totals']['diff'], list):
-                        if not isinstance(commit_report['totals']['diff'][5], type(None)):
-                            return float(commit_report['totals']['diff'][5])
+                if not isinstance(commit_details['totals']['diff'], type(None)):
+                    if isinstance(commit_details['totals']['diff'], list):
+                        if not isinstance(commit_details['totals']['diff'][5], type(None)):
+                            return float(commit_details['totals']['diff'][5])
             except Exception:
                 return 0
         return 0
