@@ -22,7 +22,7 @@ class CoverallsCoverage(BaseCoverage):
         except Exception:
             return 0
 
-    def collect_builds_data(self) -> list[dict]:
+    def collect_builds_data(self) -> list:
         print("BuildData")
         data = []
         builds_pages = self.total_builds_pages()
@@ -49,7 +49,7 @@ class CoverallsCoverage(BaseCoverage):
         return data
 
     @staticmethod
-    def fetch_source_files(commit_hash: str) -> list[str]:
+    def fetch_source_files(commit_hash: str) -> list:
         print("sourceFiles")
         source_files = []
         file_url = f"https://coveralls.io/builds/{commit_hash}/source_files.json"
