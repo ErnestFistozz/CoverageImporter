@@ -40,7 +40,7 @@ class CodeCovCoverage(BaseCoverage):
         return data
 
     @staticmethod
-    def fetch_source_file_names(commit_details: dict) -> list[str]:
+    def fetch_source_file_names(commit_details: dict) -> list:
         if commit_details:
             try:
                 files = commit_details['files']
@@ -91,7 +91,7 @@ class CodeCovCoverage(BaseCoverage):
 
     # method to fetch the patch returned from REST API
     @staticmethod
-    def api_patch_coverage(commit_details) -> float:
+    def api_patch_coverage(commit_details: dict) -> float:
         if commit_details:
             try:
                 if not isinstance(commit_details['totals']['diff'], type(None)):
