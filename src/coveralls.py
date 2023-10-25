@@ -11,6 +11,7 @@ class CoverallsCoverage(BaseCoverage):
         super().__init__(organisation, repository)
 
     def total_builds_pages(self) -> int:
+        print("TotalBuilds")
         url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page=1&per_page=10'
         try:
             res = requests.get(url, verify=False)
@@ -22,6 +23,7 @@ class CoverallsCoverage(BaseCoverage):
             return 0
 
     def collect_builds_data(self) -> list[dict]:
+        print("BuildData")
         data = []
         builds_pages = self.total_builds_pages()
         if builds_pages != 0:
@@ -48,6 +50,7 @@ class CoverallsCoverage(BaseCoverage):
 
     @staticmethod
     def fetch_source_files(commit_hash: str) -> list[str]:
+        print("sourceFiles")
         source_files = []
         file_url = f"https://coveralls.io/builds/{commit_hash}/source_files.json"
         try:

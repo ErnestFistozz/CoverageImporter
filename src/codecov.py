@@ -39,7 +39,8 @@ class CodeCovCoverage(BaseCoverage):
                     continue
         return data
 
-    def fetch_source_file_names(self, commit_report) -> list[str]:
+    @staticmethod
+    def fetch_source_file_names(commit_report) -> list[str]:
         if commit_report:
             try:
                 full_file_names = [file['name'].lower() for file in commit_report['files']]
