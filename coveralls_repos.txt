@@ -1,1 +1,6 @@
-ErnestFistozz/codecov-coveralls
+mozilla/relman-auto-nag
+microsoft/RulesEngine
+microsoft/botbuilder-python
+Microsoft/BotFramework-Emulator
+microsoft/botframework-cli
+Microsoft/powerbi-visuals-utils-tooltiputils

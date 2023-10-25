@@ -1,1 +1,6 @@
-ErnestFistozz/codecov-coveralls
+Netflix/Priam
+Netflix/spectator-cpp
+kubernetes/ingress-nginx
+kubernetes/dashboard
+mozilla/bedrock
+mozilla/addons-scanner-utils
