@@ -62,7 +62,8 @@ class CoverageImporter:
                     build['dmm_unit_interface'] = dmm_commit_interface
                     build['dmm'] = delta_maintainibility_model
                     build['crap_metric'] = commit_crappiness
-            except Exception:
+            except Exception as e:
+                Helpers.coverage_logger('coveralls', str(e))
                 continue
         return builds
 
@@ -133,7 +134,8 @@ class CoverageImporter:
                         build['dmm_unit_interface'] = dmm_commit_interface
                         build['dmm'] = delta_maintainibility_model
                         build['crap_metric'] = commit_crappiness
-            except Exception:
+            except Exception as e:
+                Helpers.coverage_logger('codecov', str(e))
                 continue
         return builds
 
