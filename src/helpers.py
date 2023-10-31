@@ -4,6 +4,7 @@ import os
 import platform
 import pandas as pd
 import subprocess
+import logging
 
 
 class Helpers:
@@ -70,6 +71,23 @@ class Helpers:
                                  capture_output=True, shell=True).stdout)
         data = result.decode('utf8').replace("'", '"')
         return data
+
+    @staticmethod
+    def coverage_logger(filename: str, error_message: str) -> None:
+        full_datetime = datetime.now()
+        file_format = '{}_{}_{}_{}_{}_{}'.format(full_datetime.day,
+                                                 full_datetime.month,
+                                                 full_datetime.year,
+                                                 full_datetime.second,
+                                                 full_datetime.minute,
+                                                 full_datetime.hour)
+        full_filename = f'/home/ernest/repositories/{file_format}_{filename}.log'
+        logging.basicConfig(filename=full_filename,
+                            encoding='utf-8',
+                            format='%(asctime)s:%(levelname)s:%(message)s',
+                            level=logging.DEBUG,
+                            datefmt='%m/%d/%Y %I:%M:%S %p')
+        logging.error(error_message)
 
 
 if __name__ == '__main__':
