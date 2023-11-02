@@ -2,6 +2,7 @@ import requests
 from src.basecoverage import BaseCoverage
 import json
 import urllib3
+from src.helpers import Helpers
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -19,7 +20,8 @@ class CoverallsCoverage(BaseCoverage):
             if res.status_code != 200:
                 raise Exception
             return res.json()['pages']
-        except Exception:
+        except (requests.exceptions.RequestException, KeyError) as e:
+            Helpers.coverage_logger('coverallsTotalBuildsError', str(e))
             return 0
 
     def collect_builds_data(self) -> list:
@@ -44,7 +46,8 @@ class CoverallsCoverage(BaseCoverage):
                         }
                         for build in res.json()['builds']
                     )
-                except Exception:
+                except (requests.exceptions.RequestException, KeyError) as e:
+                    Helpers.coverage_logger('coverallsTotalDataError', str(e))
                     continue
         return data
 
@@ -73,7 +76,8 @@ class CoverallsCoverage(BaseCoverage):
             else:
                 source_files.extend(source_file['name'] for source_file in json.loads(res.json()['source_files']))
             return source_files
-        except Exception:
+        except (requests.exceptions.RequestException, KeyError, TypeError) as e:
+            Helpers.coverage_logger('coverallSourceFilesListError', str(e))
             return []
 
     @staticmethod
@@ -85,7 +89,8 @@ class CoverallsCoverage(BaseCoverage):
             if response.status_code != 200:
                 raise Exception
             return response.json()
-        except Exception:
+        except (requests.exceptions.RequestException, KeyError) as e:
+            Helpers.coverage_logger('coverallsFileCoverageArrayError', str(e))
             return []
 
 

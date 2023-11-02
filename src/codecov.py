@@ -1,6 +1,6 @@
 import requests
 from src.basecoverage import BaseCoverage
-
+from src.helpers import Helpers
 
 class CodeCovCoverage(BaseCoverage):
 
@@ -13,7 +13,8 @@ class CodeCovCoverage(BaseCoverage):
             res = requests.get(url, verify=False)
             res.raise_for_status()
             return res.json()['total_pages']
-        except Exception:
+        except (requests.exceptions.RequestException, KeyError) as e:
+            Helpers.coverage_logger('codecovTotalBuildsError', str(e))
             return 0
 
     def collect_build_data(self) -> list:
@@ -35,7 +36,8 @@ class CodeCovCoverage(BaseCoverage):
                         }
                         for build in res.json()['results']
                     )
-                except Exception:
+                except (requests.exceptions.RequestException, KeyError) as e:
+                    Helpers.coverage_logger('codecovBuildsDataError', str(e))
                     continue
         return data
 
@@ -46,7 +48,9 @@ class CodeCovCoverage(BaseCoverage):
                 files = commit_details['files']
                 full_file_names = [file['name'].lower() for file in files]
                 return full_file_names
-            except Exception:  # Most likely exception is KeyError -> But all exceptions will be handled the same way
+            except (KeyError, TypeError) as e:  # Most likely exception is KeyError -> But all exceptions will be handled
+                # the same way
+                Helpers.coverage_logger('codecovSourceFilesError', str(e))
                 return []
         return []
 
@@ -57,7 +61,8 @@ class CodeCovCoverage(BaseCoverage):
                 data = [tuple(line_coverage) for file in commit_details['files'] if
                         file['name'].lower() == filename.lower() for line_coverage in file['line_coverage']]
                 return data
-            except Exception:
+            except (KeyError, TypeError) as e:
+                Helpers.coverage_logger('codecovFileCoverageArray', str(e))
                 return []
         return []
 
@@ -73,7 +78,8 @@ class CodeCovCoverage(BaseCoverage):
                             covered_lines += 1
                     executable_lines += len(file['line_coverage'])
                 return round((covered_lines / executable_lines) * 100, 3)
-            except Exception:
+            except (KeyError, TypeError) as e:
+                Helpers.coverage_logger('codecovComputedOverallCoverageError', str(e))
                 return 0
         return 0
 
@@ -86,7 +92,8 @@ class CodeCovCoverage(BaseCoverage):
             if res.status_code != 200:
                 raise Exception
             return res.json()
-        except Exception:
+        except (requests.exceptions.RequestException, KeyError, TypeError) as e:
+            Helpers.coverage_logger('codecovCommitReportError', str(e))
             return {}  # returns an empty dictionary
 
     # method to fetch the patch returned from REST API
@@ -98,7 +105,8 @@ class CodeCovCoverage(BaseCoverage):
                     if isinstance(commit_details['totals']['diff'], list):
                         if not isinstance(commit_details['totals']['diff'][5], type(None)):
                             return float(commit_details['totals']['diff'][5])
-            except Exception:
+            except (KeyError, TypeError) as e:
+                Helpers.coverage_logger('codecovAPIPatchError', str(e))
                 return 0
         return 0
 

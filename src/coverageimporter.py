@@ -79,7 +79,7 @@ class CoverageImporter:
                         commit_report = codecov.commit_report(
                             commit.hash)  # will call the report API and return a response
                         codecov_commit_files = codecov.fetch_source_file_names(commit_report)
-                        overall_coverage = codecov.computed_overall_coverage(commit_report)
+                        # overall_coverage = codecov.computed_overall_coverage(commit_report)
                         patch_coverage_from_api = codecov.api_patch_coverage(commit_report)
                         executable_lines = executed_lines = 0
                         patch_extracts = PatchExtracts()
@@ -129,7 +129,7 @@ class CoverageImporter:
                         # update dictionary to have delta maintainability model and crap metric
                         build['repository_name'] = '{}/{}'.format(codecov.org(), codecov.repo())
                         build['api_patch_coverage'] = patch_coverage_from_api
-                        build['computed_coverage'] = overall_coverage
+                        # build['computed_coverage'] = overall_coverage
                         build['dmm_unit_size'] = dmm_commit_size
                         build['dmm_unit_complexity'] = dmm_commit_complexity
                         build['dmm_unit_interface'] = dmm_commit_interface

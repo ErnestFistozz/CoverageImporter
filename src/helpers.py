@@ -24,13 +24,12 @@ class Helpers:
     @classmethod
     def save_into_file(cls, filename: str, coverage: list) -> None:
         print('I am saving infor to the file')
+        username = Helpers.determine_machine()
         match platform.system().lower():
             case 'linux' | 'darwin':
-                # csv_full_path = rf'/home/ernest/repositories/{filename}' # own machine
-                csv_full_path = rf'/home/shoppies/repositories/{filename}'
+                csv_full_path = rf'/home/{username}/repositories/{filename}'
             case _:
-                username = Helpers.determine_machine()
-                csv_full_path = rf'C:\Users\ebmamba\Desktop\AzureDevOpsRepos\{filename}'
+                csv_full_path = rf'C:\Users\{username}\Desktop\AzureDevOpsRepos\{filename}'
         with open(csv_full_path, "a+") as outfile:
             csv_writer = csv.writer(outfile)
             for row in coverage:
@@ -41,7 +40,7 @@ class Helpers:
                         raise Exception
                     csv_writer.writerow([Helpers.date_formatter(value) if
                                          key.lower() == 'created_at' else value for key, value in row.items()])
-                except Exception:
+                except (KeyError, TypeError):
                     continue
 
     @classmethod
@@ -64,13 +63,19 @@ class Helpers:
         with open(file_name, 'r') as file:
             return [line.split()[0].split("/") for line in file]
 
-    @classmethod
-    def determine_machine(cls) -> str:
-        cmd = '$env:USERNAME'
-        result = (subprocess.run(["powershell", "-Command", cmd],
-                                 capture_output=True, shell=True).stdout)
-        data = result.decode('utf8').replace("'", '"')
-        return data
+    @staticmethod
+    def determine_machine() -> str:
+        match platform.system().lower():
+            case 'linux' | 'darwin':
+                cmd = "whoami"
+                result = (subprocess.run(cmd, capture_output=True, shell=True, text=True, check=True).stdout)
+                return result
+            case 'windows':
+                cmd = '$env:USERNAME'
+                result = (subprocess.run(["powershell", "-Command", cmd],
+                                         capture_output=True, shell=True).stdout)
+                data = result.decode('utf8').replace("'", '"')
+                return data
 
     @staticmethod
     def coverage_logger(filename: str, error_message: str) -> None:
