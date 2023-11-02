@@ -9,20 +9,20 @@ import logging
 
 class Helpers:
 
-    @classmethod
-    def index_finder(cls, search_word: str, files: list[str]) -> int:
+    @staticmethod
+    def index_finder(search_word: str, files: list[str]) -> int:
         for index, word in enumerate(files):
             if search_word.lower() in word.lower():
                 return index
         return -1
 
-    @classmethod
-    def date_formatter(cls, timestamp: str):
+    @staticmethod
+    def date_formatter(timestamp: str):
         formated_timestamp = datetime.fromisoformat(timestamp[:-1]).astimezone(timezone.utc)
         return formated_timestamp.strftime('%Y-%m-%d %H:%M:%S')
 
-    @classmethod
-    def save_into_file(cls, filename: str, coverage: list) -> None:
+    @staticmethod
+    def save_into_file(filename: str, coverage: list) -> None:
         print('I am saving infor to the file')
         username = Helpers.determine_machine()
         match platform.system().lower():
@@ -43,8 +43,8 @@ class Helpers:
                 except (KeyError, TypeError):
                     continue
 
-    @classmethod
-    def read_from_csv(cls, filename: str) -> list:
+    @staticmethod
+    def read_from_csv(filename: str) -> list:
         if not os.path.exists(filename):
             raise FileNotFoundError
         else:

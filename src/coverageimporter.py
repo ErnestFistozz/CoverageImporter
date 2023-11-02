@@ -9,7 +9,7 @@ from src.crap_metric.commit_crap import CrapMetric
 class CoverageImporter:
 
     @staticmethod
-    def coveralls_data(coveralls: CoverallsCoverage, helpers: Helpers):
+    def coveralls_data(coveralls: CoverallsCoverage):
         git_url = 'https://github.com/{}/{}.git'.format(coveralls.org(), coveralls.repo())
         builds = coveralls.collect_builds_data()
         for build in builds:
@@ -22,7 +22,7 @@ class CoverageImporter:
                         crap_metric = CrapMetric()
                         if coveralls_commit_files:
                             for m in commit.modified_files:
-                                coveral_file_path = helpers.index_finder(m.filename, coveralls_commit_files)
+                                coveral_file_path = Helpers.index_finder(m.filename, coveralls_commit_files)
                                 if coveral_file_path != -1:
                                     coverage_array = coveralls.source_coverage_array(commit.hash,
                                                                                      coveralls_commit_files[
@@ -69,7 +69,7 @@ class CoverageImporter:
         return builds
 
     @staticmethod
-    def codecov_data(codecov: CodeCovCoverage, helpers: Helpers):
+    def codecov_data(codecov: CodeCovCoverage):
         git_url = 'https://github.com/{}/{}.git'.format(codecov.org(), codecov.repo())
         builds = codecov.collect_build_data()
         for build in builds:
@@ -86,7 +86,7 @@ class CoverageImporter:
                         crap_metric = CrapMetric()
                         if codecov_commit_files:
                             for m in commit.modified_files:
-                                coveral_file_path = helpers.index_finder(m.filename, codecov_commit_files)
+                                coveral_file_path = Helpers.index_finder(m.filename, codecov_commit_files)
                                 if coveral_file_path != -1:
                                     coverage_array = codecov.file_line_coverage_array(commit_report,
                                                                                       codecov_commit_files[
