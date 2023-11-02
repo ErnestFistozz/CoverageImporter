@@ -86,7 +86,12 @@ class Helpers:
                                                  full_datetime.second,
                                                  full_datetime.minute,
                                                  full_datetime.hour)
-        full_filename = f'/home/ernest/repositories/{file_format}_{filename}.log'
+        match platform.system().lower():
+            case  'linux' | 'darwin':
+                full_filename = rf'/home/{Helpers.determine_machine()}/repositories/{file_format}_{filename}.log'
+            case 'windows':
+                full_filename = rf'C:\Users\{Helpers.determine_machine()}\Desktop\AzureDevOpsRepos\{file_format}_{filename}.log'
+
         logging.basicConfig(filename=full_filename,
                             encoding='utf-8',
                             format='%(asctime)s:%(levelname)s:%(message)s',
