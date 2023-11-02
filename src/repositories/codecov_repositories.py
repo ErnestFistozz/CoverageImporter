@@ -17,7 +17,7 @@ class CodeCovRepositories(Repositories):
     @return <int> total number of pages --> each page contains 10 repositories
     '''
 
-    def get_total_pages(self) -> int:
+    def get_total_pages(self) -> int | None:
         try:
             url = f'https://codecov.io/api/v2/gh/{self.organisation}/repos?active=true'
             res = requests.get(url)

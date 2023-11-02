@@ -4,10 +4,13 @@ import requests
 import urllib3
 
 urllib3.disable_warnings()
+
+
 class CoverallsRepository(Repositories):
     def __init__(self, organisation: str, request_headers: dict):
         super().__init__(organisation)
         self.request_headers = request_headers
+
     '''
         Method total number of paginations representing ALL pages with repositories for that Organisation in coveralls
         Coveralls.IO currently does not have an API for retrive all repositories covered  per organisation
@@ -17,18 +20,20 @@ class CoverallsRepository(Repositories):
             I will have to remove this as the base methods do not have this signature
         @return <int> --> total number of pages representing all repositories configured to have coveralls
     '''
+
     def get_total_pages(self) -> int:
         session = HTMLSession()
         url = f"https://coveralls.io/github/{self.organisation}?page=1"
         res = session.get(url, headers=self.request_headers, verify=False)
         page_elements = res.html.find('ul.pagination')
-        if len(page_elements) == 0 or page_elements is None: 
+        if len(page_elements) == 0 or page_elements is None:
             return 1
         else:
             pagination = page_elements[0].find('a')
             array_size = len(pagination)
-            length_elem = pagination[array_size-2]
+            length_elem = pagination[array_size - 2]
             return int(length_elem.find('a')[0].text)
+
     '''
         Method for scrapping repository names from organisation page in coveralls
         Based on the total number of paginations above, this will scrap each and retrieve the organisation
@@ -37,6 +42,7 @@ class CoverallsRepository(Repositories):
         @param <request_headers: str> --> computer specific request headers
         @return <list> --> returns a list of all repository names
     '''
+
     def repositories(self) -> list:
         start_page = 1
         repo_names = []
@@ -67,6 +73,7 @@ class CoverallsRepository(Repositories):
                         continue
             start_page += 1
         return repo_names
-    
+
+
 if __name__ == '__main__':
     codecov = CoverallsRepository('apache')
