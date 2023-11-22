@@ -68,7 +68,8 @@ class Helpers:
         match platform.system().lower():
             case 'linux' | 'darwin':
                 cmd = "whoami"
-                result = (subprocess.run(cmd, capture_output=True, shell=True, text=True, check=True).stdout)
+                result = subprocess.run(cmd, capture_output=True, shell=True, text=True, check=True).stdout
+                data = result.replace('\n', '')
                 return result
             case 'windows':
                 cmd = '$env:USERNAME'
@@ -87,7 +88,7 @@ class Helpers:
                                                  full_datetime.minute,
                                                  full_datetime.hour)
         match platform.system().lower():
-            case  'linux' | 'darwin':
+            case 'linux' | 'darwin':
                 full_filename = rf'/home/{Helpers.determine_machine()}/repositories/{file_format}_{filename}.log'
             case 'windows':
                 full_filename = rf'C:\Users\{Helpers.determine_machine()}\Desktop\AzureDevOpsRepos\{file_format}_{filename}.log'

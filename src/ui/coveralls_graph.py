@@ -44,7 +44,7 @@ projects = ["apache/commons-collections", "apache/commons-io", "apache/commons-m
 distibution_data = []
 for project in projects:
     # df = pd.read_csv('large_scale_paper_coveralls_result.csv', encoding='utf-8', names=header_names)
-    df = pd.read_csv('apache_coveralls_test_results.csv', encoding='utf-8', names=header_names)
+    df = pd.read_csv('coverall_coverage_results.csv', encoding='utf-8', names=header_names)
     filtered = df.query("repository_name == @project")  # works perfectly
     # filtered = df[df['repository_name'] == project.lower()]
     zero = []
