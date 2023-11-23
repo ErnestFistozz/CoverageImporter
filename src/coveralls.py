@@ -16,10 +16,9 @@ class CoverallsCoverage(BaseCoverage):
     def total_builds_pages(self) -> int:
         print("TotalBuilds")
         url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page=1&per_page=10'
-        wait_time = 3600
+        wait_time = 600
         try:
             res = requests.get(url, verify=False)
-            res.raise_for_status()
             if res.status_code != 200:
                 if res.status_code in [403, 429]:
                     time.sleep(wait_time)
@@ -35,7 +34,7 @@ class CoverallsCoverage(BaseCoverage):
         print("BuildData")
         data = []
         builds_pages = self.total_builds_pages()
-        wait_time = 3600
+        wait_time = 600
         if builds_pages != 0:
             for page in range(1, builds_pages + 1):
                 url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page={page}&per_page=10'
@@ -57,10 +56,11 @@ class CoverallsCoverage(BaseCoverage):
                         }
                         for build in res.json()['builds']
                     )
-                    time.sleep(5)
+
                 except Exception as e:
                     Helpers.coverage_logger('coverallsTotalDataError', str(e))
                     continue
+                time.sleep(5)
         return data
 
     @staticmethod
@@ -68,7 +68,7 @@ class CoverallsCoverage(BaseCoverage):
         print("sourceFiles")
         source_files = []
         file_url = f"https://coveralls.io/builds/{commit_hash}/source_files.json"
-        wait_time = 3600
+        wait_time = 600
         try:
             res = requests.get(file_url, verify=False)
             if res.status_code != 200:
@@ -90,9 +90,9 @@ class CoverallsCoverage(BaseCoverage):
                             else:
                                 raise Exception
                         source_files.extend(file['name'] for file in json.loads(result['source_files']))
-                        time.sleep(5)
                     except Exception:
                         continue
+                    time.sleep(5)
             else:
                 source_files.extend(source_file['name'] for source_file in json.loads(res.json()['source_files']))
             return source_files
@@ -103,7 +103,7 @@ class CoverallsCoverage(BaseCoverage):
     @staticmethod
     def source_coverage_array(commit: str, filename: str) -> list:
         url = f'https://coveralls.io/builds/{commit}/source.json?filename={filename}'
-        wait_time = 3600
+        wait_time = 600
         try:
             response = requests.get(url, verify=False)
             if response.status_code != 200:

@@ -69,14 +69,15 @@ class Helpers:
             case 'linux' | 'darwin':
                 cmd = "whoami"
                 result = subprocess.run(cmd, capture_output=True, shell=True, text=True, check=True).stdout
-                data = result.replace('\n', '')
-                return result
+                user = result.replace('\n', '')
+                return user
             case 'windows':
                 cmd = '$env:USERNAME'
                 result = (subprocess.run(["powershell", "-Command", cmd],
                                          capture_output=True, shell=True).stdout)
                 data = result.decode('utf8').replace("'", '"')
-                return data
+                username = data.replace('\n', '')
+                return username
 
     @staticmethod
     def coverage_logger(filename: str, error_message: str) -> None:

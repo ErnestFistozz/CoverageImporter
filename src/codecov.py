@@ -9,7 +9,7 @@ class CodeCovCoverage(BaseCoverage):
         super().__init__(organisation, repository)
 
     def total_builds_pages(self) -> int:
-        wait_time = 3600
+        wait_time = 600
         try:
             url = f'https://codecov.io/api/v2/gh/{self.organisation}/repos/{self.repository}/commits'
             res = requests.get(url, verify=False)
@@ -27,7 +27,7 @@ class CodeCovCoverage(BaseCoverage):
     def collect_build_data(self) -> list:
         data = []
         builds_pages = self.total_builds_pages()
-        wait_time = 3600
+        wait_time = 600
         if builds_pages != 0:
             for page in range(1, builds_pages + 1):
                 try:
@@ -49,10 +49,10 @@ class CodeCovCoverage(BaseCoverage):
                         }
                         for build in res.json()['results']
                     )
-                    time.sleep(5)
                 except Exception as e:
                     Helpers.coverage_logger('codecovBuildsDataError', str(e))
                     continue
+                time.sleep(5)
         return data
 
     @staticmethod
@@ -99,7 +99,7 @@ class CodeCovCoverage(BaseCoverage):
 
     # Method to fetch the commit report once --> introduced to remove multiple api calls to same endpoint
     def commit_report(self, commitId: str):
-        wait_time = 3600
+        wait_time = 600
         try:
             url = f'https://codecov.io/api/v2/gh/{self.organisation}/repos/{self.repository}/report?sha={commitId}'
             res = requests.get(url, verify=False)
