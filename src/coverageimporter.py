@@ -101,6 +101,8 @@ class CoverageImporter:
                                                     if line_coverage_arr[1] == 0 or line_coverage_arr[1] == 1 or \
                                                             line_coverage_arr[1] == 2:
                                                         executable_lines += 1
+
+                        build['repository_name'] = '{}/{}'.format(codecov.org(), codecov.repo())
                         # patch size
                         patch_files = patch_extracts.patch_files(commit, codecov_commit_files)
                         patch_size = patch_extracts.patch_sizes(commit, codecov_commit_files)
@@ -127,7 +129,6 @@ class CoverageImporter:
                             commit_crappiness = crap_metric.commit_dmm_crap_metric(dmm_commit_complexity, (
                                     executed_lines / executable_lines) * 100)
                         # update dictionary to have delta maintainability model and crap metric
-                        build['repository_name'] = '{}/{}'.format(codecov.org(), codecov.repo())
                         build['api_patch_coverage'] = patch_coverage_from_api
                         # build['computed_coverage'] = overall_coverage
                         build['dmm_unit_size'] = dmm_commit_size
