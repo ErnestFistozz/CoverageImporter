@@ -1,3 +1,5 @@
+import time
+
 import requests
 from src.basecoverage import BaseCoverage
 import json
@@ -14,13 +16,18 @@ class CoverallsCoverage(BaseCoverage):
     def total_builds_pages(self) -> int:
         print("TotalBuilds")
         url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page=1&per_page=10'
+        wait_time = 3600
         try:
             res = requests.get(url, verify=False)
             res.raise_for_status()
             if res.status_code != 200:
-                raise Exception
+                if res.status_code in [403, 429]:
+                    time.sleep(wait_time)
+                    res = requests.get(url, verify=False)
+                else:
+                    raise Exception
             return res.json()['pages']
-        except (requests.exceptions.RequestException, KeyError) as e:
+        except Exception as e:
             Helpers.coverage_logger('coverallsTotalBuildsError', str(e))
             return 0
 
@@ -28,14 +35,18 @@ class CoverallsCoverage(BaseCoverage):
         print("BuildData")
         data = []
         builds_pages = self.total_builds_pages()
+        wait_time = 3600
         if builds_pages != 0:
             for page in range(1, builds_pages + 1):
                 url = f'https://coveralls.io/github/{self.organisation}/{self.repository}.json?page={page}&per_page=10'
                 try:
                     res = requests.get(url, verify=False)
-                    res.raise_for_status()
                     if res.status_code != 200:
-                        raise Exception
+                        if res.status_code in [403, 429]:
+                            time.sleep(wait_time)
+                            res = requests.get(url, verify=False)
+                        else:
+                            raise Exception
                     data.extend(
                         {
                             'created_at': build['created_at'],
@@ -46,7 +57,8 @@ class CoverallsCoverage(BaseCoverage):
                         }
                         for build in res.json()['builds']
                     )
-                except (requests.exceptions.RequestException, KeyError) as e:
+                    time.sleep(5)
+                except Exception as e:
                     Helpers.coverage_logger('coverallsTotalDataError', str(e))
                     continue
         return data
@@ -56,40 +68,50 @@ class CoverallsCoverage(BaseCoverage):
         print("sourceFiles")
         source_files = []
         file_url = f"https://coveralls.io/builds/{commit_hash}/source_files.json"
+        wait_time = 3600
         try:
             res = requests.get(file_url, verify=False)
-            res.raise_for_status()
             if res.status_code != 200:
-                raise Exception
+                if res.status_code in [403, 429]:
+                    time.sleep(wait_time)
+                    res = requests.get(file_url, verify=False)
+                else:
+                    raise Exception
             total_pages = res.json()['total_pages']
             if total_pages > 1:
                 for page in range(1, total_pages + 1):
                     page_url = f'{file_url}?&page={page}'
                     result = requests.get(page_url, verify=False)
-                    result.raise_for_status()
                     try:
                         if result.status_code != 200:
-                            raise Exception
+                            if result.status_code in [403, 429]:
+                                time.sleep(wait_time)
+                                result = requests.get(page_url, verify=False)
+                            else:
+                                raise Exception
                         source_files.extend(file['name'] for file in json.loads(result['source_files']))
+                        time.sleep(5)
                     except Exception:
                         continue
             else:
                 source_files.extend(source_file['name'] for source_file in json.loads(res.json()['source_files']))
             return source_files
-        except (requests.exceptions.RequestException, KeyError, TypeError) as e:
+        except Exception as e:
             Helpers.coverage_logger('coverallSourceFilesListError', str(e))
             return []
 
     @staticmethod
     def source_coverage_array(commit: str, filename: str) -> list:
         url = f'https://coveralls.io/builds/{commit}/source.json?filename={filename}'
+        wait_time = 3600
         try:
             response = requests.get(url, verify=False)
-            response.raise_for_status()
             if response.status_code != 200:
-                raise Exception
+                if response.status_code in [403, 429]:
+                    time.sleep(wait_time)
+                    response = requests.get(url, verify=False)
             return response.json()
-        except (requests.exceptions.RequestException, KeyError) as e:
+        except Exception as e:
             Helpers.coverage_logger('coverallsFileCoverageArrayError', str(e))
             return []
 

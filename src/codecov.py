@@ -1,6 +1,7 @@
 import requests
 from src.basecoverage import BaseCoverage
 from src.helpers import Helpers
+import time
 
 class CodeCovCoverage(BaseCoverage):
 
@@ -8,24 +9,36 @@ class CodeCovCoverage(BaseCoverage):
         super().__init__(organisation, repository)
 
     def total_builds_pages(self) -> int:
+        wait_time = 3600
         try:
             url = f'https://codecov.io/api/v2/gh/{self.organisation}/repos/{self.repository}/commits'
             res = requests.get(url, verify=False)
-            res.raise_for_status()
+            if res.status_code != 200:
+                if res.status_code in [403, 429]:
+                    time.sleep(wait_time)
+                    res = requests.get(url, verify=False)
+                else:
+                    raise Exception
             return res.json()['total_pages']
-        except (requests.exceptions.RequestException, KeyError) as e:
+        except Exception as e:
             Helpers.coverage_logger('codecovTotalBuildsError', str(e))
             return 0
 
     def collect_build_data(self) -> list:
         data = []
         builds_pages = self.total_builds_pages()
+        wait_time = 3600
         if builds_pages != 0:
             for page in range(1, builds_pages + 1):
                 try:
                     url = f'https://codecov.io/api/v2/gh/{self.organisation}/repos/{self.repository}/commits?page={page}'
                     res = requests.get(url, verify=False)
-                    res.raise_for_status()
+                    if res.status_code != 200:
+                        if res.status_code in [403, 429]:
+                            time.sleep(wait_time)
+                            res = requests.get(url, verify=False)
+                        else:
+                            raise Exception
                     data.extend(
                         {
                             'created_at': build['timestamp'],
@@ -36,7 +49,8 @@ class CodeCovCoverage(BaseCoverage):
                         }
                         for build in res.json()['results']
                     )
-                except (requests.exceptions.RequestException, KeyError) as e:
+                    time.sleep(5)
+                except Exception as e:
                     Helpers.coverage_logger('codecovBuildsDataError', str(e))
                     continue
         return data
@@ -48,7 +62,7 @@ class CodeCovCoverage(BaseCoverage):
                 files = commit_details['files']
                 full_file_names = [file['name'].lower() for file in files]
                 return full_file_names
-            except (KeyError, TypeError) as e:  # Most likely exception is KeyError -> But all exceptions will be handled
+            except Exception as e:  # Most likely exception is KeyError -> But all exceptions will be handled
                 # the same way
                 Helpers.coverage_logger('codecovSourceFilesError', str(e))
                 return []
@@ -61,7 +75,7 @@ class CodeCovCoverage(BaseCoverage):
                 data = [tuple(line_coverage) for file in commit_details['files'] if
                         file['name'].lower() == filename.lower() for line_coverage in file['line_coverage']]
                 return data
-            except (KeyError, TypeError) as e:
+            except Exception as e:
                 Helpers.coverage_logger('codecovFileCoverageArray', str(e))
                 return []
         return []
@@ -78,21 +92,25 @@ class CodeCovCoverage(BaseCoverage):
                             covered_lines += 1
                     executable_lines += len(file['line_coverage'])
                 return round((covered_lines / executable_lines) * 100, 3)
-            except (KeyError, TypeError) as e:
+            except Exception as e:
                 Helpers.coverage_logger('codecovComputedOverallCoverageError', str(e))
                 return 0
         return 0
 
     # Method to fetch the commit report once --> introduced to remove multiple api calls to same endpoint
     def commit_report(self, commitId: str):
+        wait_time = 3600
         try:
             url = f'https://codecov.io/api/v2/gh/{self.organisation}/repos/{self.repository}/report?sha={commitId}'
             res = requests.get(url, verify=False)
-            res.raise_for_status()
             if res.status_code != 200:
-                raise Exception
+                if res.status_code in [403, 429]:
+                    time.sleep(wait_time)
+                    res = requests.get(url, verify=False)
+                else:
+                    raise Exception
             return res.json()
-        except (requests.exceptions.RequestException, KeyError, TypeError) as e:
+        except Exception as e:
             Helpers.coverage_logger('codecovCommitReportError', str(e))
             return {}  # returns an empty dictionary
 
