@@ -8,4 +8,4 @@ if __name__ == '__main__':
     for coveralls_repo in coveralls_repositories:
         coveralls = CoverallsCoverage(coveralls_repo[0], coveralls_repo[1])
         data = coverage_importer.coveralls_data(coveralls)
-        Helpers.save_into_file('/home/ebmamba/repositories/coverall_coverage_results.csv', data)
+        Helpers.save_into_file('final_coverall_coverage_results.csv', data)
