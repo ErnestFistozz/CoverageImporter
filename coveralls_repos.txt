@@ -1,4 +1,4 @@
-eclipse/orion.client.json
+eclipse/orion.client
 facebook/AsyncDisplayKit
 kubernetes/helm
 docker/libkv
