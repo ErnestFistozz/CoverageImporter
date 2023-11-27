@@ -40,7 +40,7 @@ class Helpers:
                         raise Exception
                     csv_writer.writerow([Helpers.date_formatter(value) if
                                          key.lower() == 'created_at' else value for key, value in row.items()])
-                except (KeyError, TypeError):
+                except Exception:
                     continue
 
     @staticmethod
